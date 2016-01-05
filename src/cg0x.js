@@ -1,61 +1,50 @@
-//global
-var container, camera, controls, scene, renderer, light;
-
-//auxiliar and status
-var raycaster = new THREE.Raycaster();
-var mouse = new THREE.Vector2(),
-offset = new THREE.Vector3(),
-INTERSECTED, SELECTED, ROTATING;
-var ROTATION = false;
-var rotationmsg;
-
-init();
-render();
-
-
-function start() {
-    //initializes most variables
-    container = document.createElement( 'div' );
-    document.body.appendChild( container );
-
-    //THREE js initialparameters
-    camera = new THREE.PerspectiveCamera( 45, window.innerWidth / window.innerHeight, 1, 10000 );
-    camera.position.z = 1000;
-
-    //scene
-    scene = new THREE.Scene();
-    scene.add( new THREE.AmbientLight( 0x505050 ) );
-
-    //lighting
-    light = new THREE.SpotLight( 0xffffff, 1.0 );
-    light.position.set( 0, 500, 2000 );
-    light.castShadow = true;
-    light.shadowCameraNear = 200;
-    light.shadowCameraFar = camera.far;
-    light.shadowCameraFov = 50;
-    light.shadowBias = -0.00022;
-    light.shadowMapWidth = 2048;
-    light.shadowMapHeight = 2048;
-    scene.add( light );
-
-    // reference plane 
-    plane = new THREE.Mesh(
-        new THREE.PlaneBufferGeometry( 10000, 10000, 8, 8 ),
-        new THREE.MeshBasicMaterial( { visible: false } )
-        );
-    scene.add( plane );
-
-    renderer = new THREE.WebGLRenderer( { antialias: true } );
-    renderer.setClearColor( 0x232226 );
-    renderer.setPixelRatio( window.devicePixelRatio );
-    renderer.setSize( window.innerWidth, window.innerHeight );
-    renderer.sortObjects = false;
-    container.appendChild( renderer.domElement );
-
-    // add event listeners
-    renderer.domElement.addEventListener( 'mousemove', onDocumentMouseMove, false );
-    renderer.domElement.addEventListener( 'mousedown', onDocumentMouseDown, false );
-    renderer.domElement.addEventListener( 'mouseup', onDocumentMouseUp, false );
-    window.addEventListener( 'keydown', onDocumentKeyPressed, false );
-    window.addEventListener( 'resize', onWindowResize, false );
+if (!BABYLON.Engine.isSupported()) {
+  sweetAlert("Oops...", "WebGL is not supported in your browser... nothing is going to work :( <br> <code>[error_code:bb-000]</code>", "error");
 }
+
+var canvas = document.getElementById("renderCanvas");
+var engine = new BABYLON.Engine(canvas, true);
+
+var createScene = function () {
+
+    // This creates a basic Babylon Scene object (non-mesh)
+    var scene = new BABYLON.Scene(engine);
+
+    // This creates and positions a free camera (non-mesh)
+    var camera = new BABYLON.FreeCamera("camera1", new BABYLON.Vector3(0, 0, -10), scene);
+
+    // This targets the camera to scene origin
+    camera.setTarget(BABYLON.Vector3.Zero());
+
+    // This attaches the camera to the canvas
+    camera.attachControl(canvas, true);
+
+    // This creates a light, aiming 0,1,0 - to the sky (non-mesh)
+    var light = new BABYLON.HemisphericLight("light1", new BABYLON.Vector3(0, 1, 0), scene);
+
+    // Default intensity is 1. Let's dim the light a small amount
+    light.intensity = 0.7;
+
+    // Our built-in 'sphere' shape. Params: name, subdivs, size, scene
+    var sphere = BABYLON.Mesh.CreateSphere("sphere1", 16, 2, scene);
+
+    // Move the sphere upward 1/2 its height
+    sphere.position.y = 1;
+
+    // Our built-in 'ground' shape. Params: name, width, depth, subdivs, scene
+    var ground = BABYLON.Mesh.CreateGround("ground1", 6, 6, 2, scene);
+
+    return scene;
+
+};
+
+var scene = createScene();
+
+engine.runRenderLoop(function () {
+    scene.render();
+});
+
+// Resize
+window.addEventListener("resize", function () {
+    engine.resize();
+});
