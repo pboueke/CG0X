@@ -3,12 +3,12 @@
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 
-        <!-- CG0X -->
-        <link rel="stylesheet" type="text/css" href="css/style.css">
         <!-- boostrap -->
         <link rel="stylesheet" type="text/css" href="css/bootstrap.css">
         <!-- sweetalert -->
         <link rel="stylesheet" type="text/css" href="css/sweetalert.css">
+        <!-- CG0X -->
+        <link rel="stylesheet" type="text/css" href="css/style.css">
 
         <title>cg0x by pboueke</title>
 
@@ -39,14 +39,14 @@
           <span class="icon-bar"></span>
           <span class="icon-bar"></span>
         </button>
-        <a class="navbar-brand" href="#">CG0X</a>
+        <a class="navbar-brand" href="#" onclick="showMainMenu()">CG0X</a>
       </div>
       <!-- Collect the nav links, forms, and other content for toggling -->
       <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
         <ul class="nav navbar-nav">
           <li><a href="http://pboueke.github.io/b/">by pboueke</a></li>
-          <li><a href="#" onclick='showAbout()'>About</a></li>
-          <li><a href="#">Controls</a></li>
+          <!--<li><a href="#" onclick='showAbout()'>About</a></li>
+          <li><a href="#">Controls</a></li>-->
           <!--<li class="active"><a href="#">Link <span class="sr-only">(current)</span></a></li>-->
         </ul>
         <ul class="nav navbar-nav navbar-right">
@@ -58,14 +58,11 @@
   <!-- /NAVBAR -->
 
     <!-- CG0X -->
-    <script src="src/cg0x.js"></script>
-    <!-- navbar operations -->
-    <script>
-    var showAbout = function() {
-      swal({   title: "CG0X",
-               text: " <a href='http://pboueke.github.io/b/'>by pboueke</a> <a href='https://github.com/pboueke'><img width='30px' src='images/githubprofile.png' /></a><br><br>This is a project for the Computer Graphics course at UFRJ.<br><br>Feel free to contact me at <br><code>p h b o u e k e 'at' g m a i l . c o m</code><br><br>There's also my <a href='http://pboueke.github.io/b/about/'>info page</a>.<br><br><br><a rel='license' href='http://creativecommons.org/licenses/by-nc/4.0/''><img alt='Creative Commons License' style='border-width:0' src='https://i.creativecommons.org/l/by-nc/4.0/88x31.png' /></a><br><br /><small>This work is licensed under a <a rel='license' href='http://creativecommons.org/licenses/by-nc/4.0/'>Creative Commons Attribution-NonCommercial 4.0 International License</a>.</small>",
-               html: true });
-    }
-    </script>
+    <script src="src/config.js"></script>
+    <script src="src/ui.js"></script>
+    <script src="src/objects.js"></script>
+    <script src="src/scenes.js"></script>
+    <script src="src/main.js"></script>
+
 </body>
 </html>

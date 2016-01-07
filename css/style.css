@@ -14,9 +14,42 @@ html, body {
 }
 
 a {
-    color: white;
+    color: blue;
 }
 
+h1, h3 {
+  color: white;
+}
 #info {
 	position: absolute;
+}
+
+.fkbtn {
+  height: 90px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.fkbtn-sm {
+  height: 45px;
+}
+.fkbtn-blue {
+  background-color: rgb(0, 64, 124);
+} .fkbtn-blue:hover {
+  background-color: rgb(14, 84, 159);
+}
+.fkbtn-green {
+  background-color: rgb(20, 102, 35);
+} .fkbtn-green:hover {
+  background-color: rgb(37, 126, 27);
+}
+.fkbtn-orange {
+  background-color: rgb(158, 122, 43);
+} .fkbtn-orange:hover {
+  background-color: rgb(177, 142, 38);
+}
+.fkbtn-grey {
+  background-color: rgb(101, 101, 101);
+} .fkbtn-grey:hover {
+  background-color: rgb(130, 130, 130);
 }
