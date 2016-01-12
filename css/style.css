@@ -29,27 +29,71 @@ h1, h3 {
   display: flex;
   justify-content: center;
   align-items: center;
+  margin-left: auto ;
+  margin-right: auto ;
+  width: 90%;
+} .fkbtn:hover {
+  width: 100%;
 }
-.fkbtn-sm {
-  height: 45px;
+.fkbtn-half {
+  width: 25%;
+} .fkbtn-half:hover {
+  width: 25%;
+} .fkbtn-half-left{
+  float: left;
+  margin-left: 70px;
+}.fkbtn-half-right{
+  float: right;
+  margin-right: 70px;
 }
-.fkbtn-blue {
-  background-color: rgb(0, 64, 124);
-} .fkbtn-blue:hover {
-  background-color: rgb(14, 84, 159);
+
+.fkbtn-strong-blue {
+  background-color: rgb(6, 32, 198);
+} .fkbtn-strong-blue:hover {
+  background-color: rgb(59, 82, 229);
 }
-.fkbtn-green {
-  background-color: rgb(20, 102, 35);
-} .fkbtn-green:hover {
-  background-color: rgb(37, 126, 27);
+.fkbtn-weak-blue {
+  background-color: rgb(19, 74, 140);
+} .fkbtn-weak-blue:hover {
+  background-color: rgb(74, 119, 172);
 }
-.fkbtn-orange {
-  background-color: rgb(158, 122, 43);
-} .fkbtn-orange:hover {
-  background-color: rgb(177, 142, 38);
+.fkbtn-strong-green {
+  background-color: rgb(31, 151, 0);
+} .fkbtn-strong-green:hover {
+  background-color: rgb(47, 225, 0);
+}
+.fkbtn-strong-green {
+  background-color: rgb(19, 205, 0);
+} .fkbtn-strong-green:hover {
+  background-color: rgb(90, 221, 76);
+}
+.fkbtn-weak-green {
+  background-color: rgb(0, 138, 24);
+} .fkbtn-weak-green:hover {
+  background-color: rgb(37, 187, 63);
+}
+.fkbtn-strong-orange {
+  background-color: rgb(255, 131, 29);
+} .fkbtn-strong-orange:hover {
+  background-color: rgb(255, 154, 71);
+}
+.fkbtn-weak-orange {
+  background-color: rgb(214, 89, 12);
+} .fkbtn-weak-orange:hover {
+  background-color: rgb(255, 158, 97);
+}
+.fkbtn-strong-red {
+  background-color: rgb(250, 12, 0);
+} .fkbtn-strong-red:hover {
+  background-color: rgb(255, 95, 87);
+}
+.fkbtn-weak-red {
+  background-color: rgb(139, 10, 3);
+} .fkbtn-weak-red:hover {
+  background-color: rgb(204, 64, 57);
 }
 .fkbtn-grey {
-  background-color: rgb(101, 101, 101);
+  background-color: rgb(95, 95, 95);
 } .fkbtn-grey:hover {
-  background-color: rgb(130, 130, 130);
+  background-color: rgb(133, 133, 133);
 }
