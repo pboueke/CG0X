@@ -36,44 +36,34 @@ var showAbout = function (back_to) {
 };
 
 var setSoundOptions = function (id, returns) {
-  // if returns is false: toggle soud configuration, if rturns is true, returns the html of the toggle buttons
+  // if returns is false: toggle sound configuration, if rturns is true: returns the html of the toggle buttons
   var inner_html = "";
   var css_class = "";
   if (id === "sfx") {
     if ((sound_options.sfx_enabled && !returns) || (!sound_options.sfx_enabled && returns)) {
       inner_html = "<del style='color: white'><h1>S<br><small style='color: white'>Sound</small></h1></del>";
       css_class = "fkbtn fkbtn-half fkbtn-half-left fkbtn-strong-red";
-      if (!returns) {
-        sound_options.sfx_enabled = false;
-        document.getElementById('sfxBtn').innerHTML = inner_html;
-        document.getElementById('sfxBtn').className = css_class;
-      }
     } else {
       inner_html = "<h1>S<br><small style='color: white'>Sound</small></h1>";
       css_class = "fkbtn fkbtn-half fkbtn-half-left fkbtn-strong-blue";
-      if (!returns) {
-        sound_options.sfx_enabled = true;
-        document.getElementById('sfxBtn').innerHTML = inner_html;
-        document.getElementById('sfxBtn').className = css_class;
-      }
+    }
+    if (!returns) {
+      sound_options.sfx_enabled = sound_options.sfx_enabled ? false : true;
+      document.getElementById('sfxBtn').innerHTML = inner_html;
+      document.getElementById('sfxBtn').className = css_class;
     }
   } else if (id === "music") {
     if ((sound_options.music_enabled && !returns) || (!sound_options.music_enabled && returns)) {
       inner_html = "<del style='color: white'><h1>M<br><small style='color: white'>Music</small></h1></del>";
       css_class = "fkbtn fkbtn-half fkbtn-half-left fkbtn-strong-red";
-      if (!returns) {
-        sound_options.music_enabled = false;
-        document.getElementById('musicBtn').innerHTML = inner_html;
-        document.getElementById('musicBtn').className = css_class;
-      }
     } else {
       inner_html = "<h1>M<br><small style='color: white'>Music</small></h1>";
       css_class = "fkbtn fkbtn-half fkbtn-half-left fkbtn-strong-blue";
-      if (!returns) {
-        sound_options.music_enabled = true;
-        document.getElementById('musicBtn').innerHTML = inner_html;
-        document.getElementById('musicBtn').className = css_class;
-      }
+    }
+    if (!returns) {
+      sound_options.music_enabled = sound_options.music_enabled ? false : true;
+      document.getElementById('musicBtn').innerHTML = inner_html;
+      document.getElementById('musicBtn').className = css_class;
     }
   }
   if (returns) {
