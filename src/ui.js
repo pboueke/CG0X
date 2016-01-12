@@ -36,7 +36,7 @@ var showAbout = function (back_to) {
 };
 
 var setSoundOptions = function (id, returns) {
-  // if returns is false: toggle sound configuration, if rturns is true: returns the html of the toggle buttons
+  // if returns is false: toggle sound configuration, if rturns is true: returns the html an class of the toggle buttons
   var inner_html = "";
   var css_class = "";
   if (id === "sfx") {
