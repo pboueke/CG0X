@@ -103,6 +103,43 @@ var showOptions = function (back_to) {
          });
 };
 
+var startGame = function () {
+
+};
+
+var changeBallType = function (type) {
+  var div_seleted_class = "fkbtn fkbtn-third fkbtn-strong-red";
+  var non_seleted_class = "fkbtn fkbtn-third fkbtn-weak-blue";
+  ball_type = type;
+  document.getElementById('traditionalballBtn').className = ((ball_type === "traditional") ? div_seleted_class : non_seleted_class);
+  document.getElementById('gravitationalballBtn').className = ((ball_type === "gravitational") ? div_seleted_class : non_seleted_class);
+  document.getElementById('curveballBtn').className = ((ball_type === "curveball") ? div_seleted_class : non_seleted_class);
+};
+
+// [game] Game Options
+var showGameOptions = function (back_to, next_area) {
+  var parent = (back_to === "versus_type") ? "showVersusTypeSelector()" : "showModeSelector()";
+  next_scene = next_area;
+  swal({   title: "Game Options",
+           showConfirmButton: false,
+           allowEscapeKey: false,
+           allowOutsideClick: false,
+           closeOnCancel: false,
+           closeOnConfirm: false,
+           html: true,
+           text: "<b>Ball Type:</b><br><br><div class='row'>" +
+                 "<div class='col-md-4'><div id='traditionalballBtn' onclick=\"changeBallType('traditional')\" class=''><h4>Traditional<br>ball</h4></div></div>" +
+                 "<div class='col-md-4'><div id='gravitationalballBtn' onclick=\"changeBallType('gravitational')\" class=''><h4>Gravitational<br>ball</h4></div></div>" +
+                 "<div class='col-md-4'><div id='curveballBtn' onclick=\"changeBallType('curveball')\" class=''><h4>Curve<br>ball</h4></div></div> <br>" +
+                 "</div><br><br>" +
+                 "<br><br>" +
+                 "<br><br>" +
+                 "<br><br>" +
+                 "<div onclick=\"startGame()\" class='fkbtn fkbtn-strong-green'><h1>Start <span class=\"glyphicon glyphicon-play\" aria-hidden=\"true\"></span></h1></div> <br>" +
+                 "<div onclick=" + parent + " class='fkbtn fkbtn-grey'><h1>Go Back <span class=\"glyphicon glyphicon-menu-hamburger\" aria-hidden=\"true\"></span></h1></div> <br>"
+         });
+         changeBallType (ball_type);
+};
 
 // [menu] Controls
 var showControls = function (back_to) {
@@ -143,8 +180,8 @@ var showVersusTypeSelector = function () {
            closeOnConfirm: false,
            html: true,
            text: "<br><br>" +
-                 "<div onclick=\"\" class='fkbtn fkbtn-strong-red'><h1>A.I.</h1></div> <br>" +
-                 "<div onclick=\"\" class='fkbtn fkbtn-strong-green'><h1>Self</h1></div> <br>" +
+                 "<div onclick=\"showGameOptions('versus_type', 'versus_ai')\" class='fkbtn fkbtn-strong-red'><h1>A.I.</h1></div> <br>" +
+                 "<div onclick=\"showGameOptions('versus_type', 'versus_self')\" class='fkbtn fkbtn-strong-green'><h1>Self</h1></div> <br>" +
                  "<br><br>" +
                  "<br><br>" +
                  "<br><br>" +
@@ -163,7 +200,7 @@ var showModeSelector = function () {
            html: true,
            text: "<br><br>" +
                  "<div onclick=\"showVersusTypeSelector()\" class='fkbtn fkbtn-weak-blue'><h1>Versus</h1></div> <br>" +
-                 "<div onclick=\"\" class='fkbtn fkbtn-strong-orange'><h1>Squash</h1></div> <br>" +
+                 "<div onclick=\"showGameOptions('', 'squash')\" class='fkbtn fkbtn-strong-orange'><h1>Squash</h1></div> <br>" +
                  "<br><br>" +
                  "<br><br>" +
                  "<br><br>" +

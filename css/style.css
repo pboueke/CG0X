@@ -17,7 +17,7 @@ a {
     color: blue;
 }
 
-h1, h3 {
+h1, h3, h4 {
   color: white;
 }
 #info {
@@ -43,6 +43,11 @@ h1, h3 {
   transition: width 0.1s;
   transition-timing-function: ease-out;
 }
+} .fkbtn-third {
+  width: 15%;
+} .fkbtn-third:hover {
+  width: 100%;
+}
 .fkbtn-half {
   width: 25%;
 } .fkbtn-half:hover {
@@ -64,11 +69,6 @@ h1, h3 {
   background-color: rgb(19, 74, 140);
 } .fkbtn-weak-blue:hover {
   background-color: rgb(74, 119, 172);
-}
-.fkbtn-strong-green {
-  background-color: rgb(31, 151, 0);
-} .fkbtn-strong-green:hover {
-  background-color: rgb(47, 225, 0);
 }
 .fkbtn-strong-green {
   background-color: rgb(19, 205, 0);
