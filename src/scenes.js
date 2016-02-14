@@ -52,6 +52,13 @@ var loadGameScene = function () {
     document.removeEventListener("mousemove", update_mouse);
   } catch (e) {console.log(e);}
   document.addEventListener("mousemove", update_mouse);
+  window.addEventListener("keydown", function (e) {
+    var evt = e || window.event;
+      if (evt.keyCode === 82) {
+        ball.on_game = false;
+        reset_ball("player2");
+      }
+  });
 
   var move = function() {
     ball.on_game = true;
@@ -99,15 +106,12 @@ var loadGameScene = function () {
   var made_contact = false;
 
   var update_ball_velocity = function () {
-    if (!made_contact){
-      ball_options.velocity.value.x = ball_options.velocity.last_x - ball.sphere.position.x;
-      ball_options.velocity.value.y = ball_options.velocity.last_y - ball.sphere.position.y;
-      ball_options.velocity.value.z = ball_options.velocity.last_z - ball.sphere.position.z;
-      ball_options.velocity.last_x = ball.sphere.position.x;
-      ball_options.velocity.last_y = ball.sphere.position.y;
-      ball_options.velocity.last_z = ball.sphere.position.z;
-    }
-    setTimeout(update_ball_velocity, delta_time);
+    ball_options.velocity.value.x = ball_options.velocity.last_x - ball.sphere.position.x;
+    ball_options.velocity.value.y = ball_options.velocity.last_y - ball.sphere.position.y;
+    ball_options.velocity.value.z = ball_options.velocity.last_z - ball.sphere.position.z;
+    ball_options.velocity.last_x = ball.sphere.position.x;
+    ball_options.velocity.last_y = ball.sphere.position.y;
+    ball_options.velocity.last_z = ball.sphere.position.z;
   };
 
   var update_racket_velocity = function () {
@@ -120,10 +124,13 @@ var loadGameScene = function () {
     setTimeout(update_racket_velocity, delta_time);
   };
 
-  setTimeout(update_ball_velocity, delta_time);
   setTimeout(update_racket_velocity, delta_time);
 
   scene.registerBeforeRender(function () {
+
+  if (!made_contact) {
+    update_ball_velocity();
+  }
 
     // intersections
     if (ball.sphere.intersectsMesh(walls.collider_front, false) && ball.on_game) {
@@ -135,16 +142,18 @@ var loadGameScene = function () {
       setTimeout(function() {reset_ball("player1");}, 1000);
     }
     if (ball.sphere.intersectsMesh(racket.plane, true)) {
-      var imp = new BABYLON.Vector3(-ball_options.velocity.value.x + (racket_options.velocity.value.x),
-                                    -ball_options.velocity.value.y + (racket_options.velocity.value.y),
-                                     ball_options.velocity.value.z + (racket_options.velocity.value.z));
-      ball.sphere.applyImpulse(imp, ball.sphere.position);
+      if (!made_contact) {
+        var imp = new BABYLON.Vector3(clamp_number(-ball_options.velocity.value.x * contact_multiplier.lateral_ball + (racket_options.velocity.value.x * contact_multiplier.lateral_racket), contact_multiplier.min_lateral_impulse, contact_multiplier.max_lateral_impulse),
+                                      clamp_number(-ball_options.velocity.value.y * contact_multiplier.lateral_ball + (racket_options.velocity.value.y * contact_multiplier.lateral_racket), contact_multiplier.min_lateral_impulse, contact_multiplier.max_lateral_impulse),
+                                      clamp_number(ball_options.velocity.value.z * contact_multiplier.frontal_ball + (Math.sqrt(Math.pow(racket_options.velocity.value.x, 2)+Math.pow(racket_options.velocity.value.y, 2))) * contact_multiplier.frontal_racket, contact_multiplier.min_frontal_impulse, contact_multiplier.max_frontal_impulse));
+        console.log(ball_options.velocity.value," || ", racket_options.velocity.value, " || ",imp);
+        ball.sphere.applyImpulse(imp, ball.sphere.position);
+      }
       made_contact = true;
     } else {
       made_contact = false;
     }
     if (allow_movement) {
-      console.log("foi");
       var x_dif = mouse.x_past - mouse.x_current;
       var y_dif = mouse.y_past - mouse.y_current;
       var vec = new BABYLON.Vector3 (mouse.x_current, -mouse.y_current, 0).normalize();

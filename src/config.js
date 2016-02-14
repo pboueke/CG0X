@@ -5,6 +5,17 @@ var objects = [];
 
 var delta_time = 10;
 
+var contact_multiplier = {
+  lateral_ball: 5,
+  frontal_ball: 40,
+  lateral_racket: 10,
+  frontal_racket: 60,
+  max_frontal_impulse: 160,
+  min_frontal_impulse: 70,
+  max_lateral_impulse: 40,
+  min_lateral_impulse: 5,
+};
+
 var mouse = {
   x_past: 0,
   y_past: 0,

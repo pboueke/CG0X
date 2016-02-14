@@ -21,8 +21,8 @@ function Racket () {
   //box.scaling = new BABYLON.Vector3(width, height, depth)
   this.plane.scaling = new BABYLON.Vector3(racket_options.width, racket_options.heigth, racket_options.thickness);
   this.plane.position.z = -wall_options.length/2 + wall_options.thickness/3;
-  this.plane.setPhysicsState(BABYLON.PhysicsEngine.BoxImpostor, {mass: racket_options.mass, restitution: racket_options.restitution, friction: racket_options.friction});
-  this.plane.applyGravity = false;
+  //this.plane.setPhysicsState(BABYLON.PhysicsEngine.BoxImpostor, {mass: racket_options.mass, restitution: racket_options.restitution, friction: racket_options.friction});
+  //this.plane.applyGravity = false;
 }
 
 function Ball () {
