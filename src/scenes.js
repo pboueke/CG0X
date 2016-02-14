@@ -33,6 +33,7 @@ var loadGameScene = function () {
   setTimeout(move, 1000);
 
   var reset_ball = function (player) {
+    objects.splice(objects.indexOf(ball.sphere.name), 1);
     ball.sphere.dispose();
     ball = new Ball();
     setTimeout(move, 1000);
