@@ -3,9 +3,21 @@
 // objects loaded in the babylon canvas
 var objects = [];
 
+var delta_time = 10;
+
+var mouse = {
+  x_past: 0,
+  y_past: 0,
+  x_current: 0,
+  y_current: 0,
+  x_dif: 0,
+  y_dif: 0,
+};
+
 var ui_scene = {
   current: "welcome_area",
-  next: "main_menu"
+  next: "main_menu",
+  status: "paused", //paused, running or menu
 };
 
 var score = {
@@ -20,7 +32,32 @@ var sound_options = {
   };
 
 var racket_options = {
-
+  name: "racket",
+  // wall type values: squash, versus
+  type: "plane",
+  width: 3.5,
+  heigth: 2,
+  thickness: 0.01,
+  frame_thickness: 0.1,
+  colors: {
+    plane: {r:1, g:1, b:1, a:0.3},
+    frame: {r:0, g:0, b:1, a:0.3},
+  },
+  // Babylon physics parameters
+  mass: 1000000.0,
+  restitution: 1,
+  friction: 1,
+  speed: 0.05,
+  velocity: {
+    last_x: 0,
+    last_y: 0,
+    last_z: 0,
+    value: {
+      x: 0,
+      y: 0,
+      z: 0,
+    },
+  }
 };
 
 var ball_options = {
@@ -36,6 +73,26 @@ var ball_options = {
   mass: 1.0,
   restitution: 0.9,
   friction: 0.01,
+  impulse: {
+    main_axis: {
+      max: 40,
+      min: 20,
+    },
+    sec_axis: {
+      max: 15,
+      min: 5,
+    },
+  },
+  velocity: {
+    last_x: 0,
+    last_y: 0,
+    last_z: 0,
+    value: {
+      x: 0,
+      y: 0,
+      z: 0,
+    },
+  }
 };
 
 var wall_options = {
@@ -62,6 +119,10 @@ var wall_options = {
   mass: 0.0,
   restitution: 0.9,
   friction: 0.0001,
+};
+
+physics_options = {
+  gravity: -20,
 };
 
 // Simply increments an variable, which is used as an id

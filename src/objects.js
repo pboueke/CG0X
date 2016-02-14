@@ -1,16 +1,44 @@
 function Racket () {
-
+  var faceColors = new Array(6);
+  for (i = 0; i < faceColors.length; i++) {
+    faceColors[i] = new BABYLON.Color4(racket_options.colors.plane.r, racket_options.colors.plane.g, racket_options.colors.plane.b, racket_options.colors.plane.a);
+  }
+  var options = {
+    width: 1,
+    heigth: 1,
+    depth: 1,
+    faceColors: faceColors,
+  };
+  var obj_name = racket_options.name + "_" + racket_options.type + "_" + id.Get();
+  var ball_material = new BABYLON.StandardMaterial("collider_material", scene);
+  ball_material.diffuseColor = new BABYLON.Color3(racket_options.colors.plane.r, racket_options.colors.plane.g, racket_options.colors.plane.b);
+  ball_material.specularColor = new BABYLON.Color3(racket_options.colors.plane.r, racket_options.colors.plane.g, racket_options.colors.plane.b);
+  ball_material.alpha = racket_options.colors.plane.a;
+  this.plane = BABYLON.Mesh.CreateBox(obj_name, options, scene);
+  this.plane.material = ball_material;
+  objects.push(obj_name);
+  this.plane.position = new BABYLON.Vector3(wall_options.position.x, wall_options.position.y, wall_options.position.z);
+  //box.scaling = new BABYLON.Vector3(width, height, depth)
+  this.plane.scaling = new BABYLON.Vector3(racket_options.width, racket_options.heigth, racket_options.thickness);
+  this.plane.position.z = -wall_options.length/2 + wall_options.thickness/3;
+  this.plane.setPhysicsState(BABYLON.PhysicsEngine.BoxImpostor, {mass: racket_options.mass, restitution: racket_options.restitution, friction: racket_options.friction});
+  this.plane.applyGravity = false;
 }
 
 function Ball () {
   var obj_name = ball_options.name + "_" + ball_options.type + "_" + id.Get();
   var magnus_factor = (ball_options.type === "curveball") ? ball_options.magnus_constant : 0.0;
-  var gravity_factor = (ball_options.type === "gravitational") ? ball_options.mass : 0.0;
+  var gravity_factor = ball_options.mass;
   this.on_game = false;
   this.sphere = BABYLON.Mesh.CreateSphere(obj_name , ball_options.segments, ball_options.diameter, scene);
   objects.push(obj_name);
   this.sphere.setPhysicsState(BABYLON.PhysicsEngine.SphereImpostor, { mass: gravity_factor, friction: ball_options.friction, restitution: ball_options.restitution});
   this.sphere.position = new BABYLON.Vector3(wall_options.position.x, wall_options.position.y, wall_options.position.z);
+  if (ball_options.type === "gravitational") {
+    scene.setGravity(new BABYLON.Vector3(0, physics_options.gravity, 0));
+  } else {
+    scene.setGravity(new BABYLON.Vector3(0, 0, 0));
+  }
 }
 
 function Walls () {
@@ -112,7 +140,7 @@ function Walls () {
   var collider_material = new BABYLON.StandardMaterial("collider_material", scene);
   collider_material.diffuseColor = new BABYLON.Color3(0, 0, 1);
   collider_material.specularColor = new BABYLON.Color3(0, 0, 1);
-  collider_material.alpha = 0.5;
+  collider_material.alpha = 0.0;
   this.collider_front = BABYLON.Mesh.CreateBox(obj_name, options, scene);
   this.collider_front.material = collider_material;
   objects.push(obj_name);
@@ -122,7 +150,6 @@ function Walls () {
   //this.collider_front.setPhysicsState(BABYLON.PhysicsEngine.BoxImpostor, {mass: 100, restitution: 0, friction: 1});
   // collider_back
   obj_name = wall_options.name + "_colliderB_" + id.Get();
-  collider_material.alpha = 0.0;
   this.collider_back = BABYLON.Mesh.CreateBox(obj_name, options, scene);
   this.collider_back.material = collider_material;
   objects.push(obj_name);

@@ -104,9 +104,26 @@ var showOptions = function (back_to) {
 };
 
 var startGame = function () {
-  swal.close();
+  // lock cursor
+  canvas.requestPointerLock = canvas.requestPointerLock ||
+                            canvas.mozRequestPointerLock ||
+                            canvas.webkitRequestPointerLock;
+  canvas.requestPointerLock();
+  swal({   title: "Just one more thing",
+           showConfirmButton: false,
+           allowEscapeKey: true,
+           allowOutsideClick: false,
+           closeOnCancel: false,
+           closeOnConfirm: true,
+           html: true,
+           text: "<b>Please, allow the game to lock your mouse cursor</b>" +
+                 "<br><br>" +
+                 "<br><br>" +
+                 "<br><br>"
+         });
   clearScene();
   loadGameScene();
+  setTimeout(engine.stopRenderLoop(), 100);
 };
 
 var changeBallType = function (type) {
@@ -223,7 +240,7 @@ var showMainMenu = function  () {
            allowEscapeKey: false,
            allowOutsideClick: false,
            closeOnCancel: false,
-           closeOnConfirm: false,
+           closeOnConfirm: true,
            html: true,
            text: "<br><br>" +
                  "<div onclick=\"showModeSelector()\" class='fkbtn fkbtn-strong-blue'><h1>Play <span class=\"glyphicon glyphicon-play\" aria-hidden=\"true\"></span></h1></div> <br>" +
@@ -235,5 +252,26 @@ var showMainMenu = function  () {
 
 // Resize
 window.addEventListener("resize", function () {
-    engine.resize();
+  engine.resize();
+});
+
+window.addEventListener("keydown", function (e) {
+  var evt = e || window.event;
+  if (evt.keyCode === 32 || evt.keyCode === 80|| evt.keyCode === 83 || evt.keyCode === 13) {
+      if (ui_scene.status === "paused") {
+        ui_scene.status = "running";
+        engine.runRenderLoop(function () {
+          scene.render();
+        });
+      } else if (ui_scene.status === "running") {
+        engine.stopRenderLoop();
+        ui_scene.status = "paused";
+      }
+    }
+    if (evt.keyCode === 76) {
+      canvas.requestPointerLock = canvas.requestPointerLock ||
+                                canvas.mozRequestPointerLock ||
+                                canvas.webkitRequestPointerLock;
+      canvas.requestPointerLock();
+    }
 });
