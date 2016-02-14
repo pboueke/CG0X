@@ -74,6 +74,11 @@ IdHandler.prototype.Get = function () {
 };
 id = new IdHandler();
 
-var random_number = function (min, max) {
-    return Math.random() * (max - min) + min;
-};
+function random_number(min, max) {
+    var res = Math.random() * (max - min) + min;
+    var side = Math.floor(Math.random() * (max - min + 1)) + min;
+    if (side%2 === 0) {
+      res *= -1;
+    }
+    return res;
+}

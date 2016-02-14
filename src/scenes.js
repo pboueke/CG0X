@@ -26,26 +26,28 @@ var loadGameScene = function () {
   ball = new Ball();
 
   var move = function() {
+    ball.on_game = true;
     ball.sphere.applyImpulse(new BABYLON.Vector3(random_number(5, 10), random_number(5, 10), random_number(10,20)), ball.sphere.position);
   };
 
   setTimeout(move, 1000);
 
-  // intersections
-  scene.registerBeforeRender(function () {
-
   var reset_ball = function (player) {
-    
+    ball.sphere.dispose();
+    ball = new Ball();
+    setTimeout(move, 1000);
   };
 
-  if (ball.sphere.intersectsMesh(walls.collider_front, false)) {
-      balloon1.material.emissiveColor = new BABYLON.Color3(1, 0, 0);
-  }
-  if (ball.sphere.intersectsMesh(walls.collider_back, true)) {
-      balloon2.material.emissiveColor = new BABYLON.Color3(1, 0, 0);
-  }
-
-
+  // intersections
+  scene.registerBeforeRender(function () {
+    if (ball.sphere.intersectsMesh(walls.collider_front, false) && ball.on_game) {
+      ball.on_game = false;
+      setTimeout(function() {reset_ball("player2");}, 2000);
+    }
+    if (ball.sphere.intersectsMesh(walls.collider_back, true) && ball.on_game) {
+      ball.on_game = false;
+      setTimeout(function() {reset_ball("player1");}, 1000);
+    }
   });
 
 };
