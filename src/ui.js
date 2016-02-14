@@ -7,7 +7,7 @@
 */
 
 // [main menu] About
-var showAbout = function (back_to) {
+var showAbout = function (back_to, msg) {
   var parent = "";
   if (back_to === "main_menu") {
     parent = "'showMainMenu()'";
@@ -31,7 +31,7 @@ var showAbout = function (back_to) {
                  "</a><br><br><small>This work is licensed under a " +
                  "<a rel='license' href='http://creativecommons.org/licenses/by-nc/4.0/'>Creative Commons Attribution-NonCommercial 4.0 International License</a>.</small> <br><br><br>" +
                  "Source:<br><a href='https://github.com/pboueke/CG0X'><img width='100px' src='images/GitHub-Logo.png' /></a><br><br>" +
-                 "<div onclick=" + parent + " class='fkbtn fkbtn-grey'><h1>Go Back <span class=\"glyphicon glyphicon-menu-hamburger\" aria-hidden=\"true\"></span></h1></div> <br>"
+                 "<div onclick=" + parent + " class='fkbtn fkbtn-grey'><h1>" + msg + " <span class=\"glyphicon glyphicon-menu-hamburger\" aria-hidden=\"true\"></span></h1></div> <br>"
         });
 };
 
@@ -104,22 +104,29 @@ var showOptions = function (back_to) {
 };
 
 var startGame = function () {
-
+  swal.close();
+  clearScene();
+  loadGameScene();
 };
 
 var changeBallType = function (type) {
   var div_seleted_class = "fkbtn fkbtn-third fkbtn-strong-red";
   var non_seleted_class = "fkbtn fkbtn-third fkbtn-weak-blue";
-  ball_type = type;
-  document.getElementById('traditionalballBtn').className = ((ball_type === "traditional") ? div_seleted_class : non_seleted_class);
-  document.getElementById('gravitationalballBtn').className = ((ball_type === "gravitational") ? div_seleted_class : non_seleted_class);
-  document.getElementById('curveballBtn').className = ((ball_type === "curveball") ? div_seleted_class : non_seleted_class);
+  ball_options.type = type;
+  document.getElementById('traditionalballBtn').className = ((ball_options.type === "traditional") ? div_seleted_class : non_seleted_class);
+  document.getElementById('gravitationalballBtn').className = ((ball_options.type === "gravitational") ? div_seleted_class : non_seleted_class);
+  document.getElementById('curveballBtn').className = ((ball_options.type === "curveball") ? div_seleted_class : non_seleted_class);
 };
 
 // [game] Game Options
 var showGameOptions = function (back_to, next_area) {
   var parent = (back_to === "versus_type") ? "showVersusTypeSelector()" : "showModeSelector()";
-  next_scene = next_area;
+  ui_scene.next = next_area;
+  if (next_area.indexOf("squash") > -1) {
+    wall_options.type = "squash";
+  } else if (next_area.indexOf("versus") > -1) {
+    wall_options.type = "versus";
+  }
   swal({   title: "Game Options",
            showConfirmButton: false,
            allowEscapeKey: false,
@@ -138,7 +145,7 @@ var showGameOptions = function (back_to, next_area) {
                  "<div onclick=\"startGame()\" class='fkbtn fkbtn-strong-green'><h1>Start <span class=\"glyphicon glyphicon-play\" aria-hidden=\"true\"></span></h1></div> <br>" +
                  "<div onclick=" + parent + " class='fkbtn fkbtn-grey'><h1>Go Back <span class=\"glyphicon glyphicon-menu-hamburger\" aria-hidden=\"true\"></span></h1></div> <br>"
          });
-         changeBallType (ball_type);
+         changeBallType (ball_options.type);
 };
 
 // [menu] Controls
@@ -222,7 +229,7 @@ var showMainMenu = function  () {
                  "<div onclick=\"showModeSelector()\" class='fkbtn fkbtn-strong-blue'><h1>Play <span class=\"glyphicon glyphicon-play\" aria-hidden=\"true\"></span></h1></div> <br>" +
                  "<div onclick=\"showOptions('main_menu')\" class='fkbtn fkbtn-weak-orange'><h1>Options <span class=\"glyphicon glyphicon-cog\" aria-hidden=\"true\"></span></h1></div> <br>" +
                  "<div onclick=\"showControls('main_menu')\" class='fkbtn fkbtn-weak-green'><h1>Controls <span class=\"glyphicon glyphicon-education\" aria-hidden=\"true\"></span></h1></div> <br>" +
-                 "<div onclick=\"showAbout('main_menu')\" class='fkbtn fkbtn-grey'><h1>About <span class=\"glyphicon glyphicon-info-sign\" aria-hidden=\"true\"></span></h1></div> <br>"
+                 "<div onclick=\"showAbout('main_menu', 'Go Back')\" class='fkbtn fkbtn-grey'><h1>About <span class=\"glyphicon glyphicon-info-sign\" aria-hidden=\"true\"></span></h1></div> <br>"
         });
 };
 
