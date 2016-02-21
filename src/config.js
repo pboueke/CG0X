@@ -12,8 +12,8 @@ var contact_multiplier = {
   frontal_ball: 40,
   lateral_racket: 20,
   frontal_racket: 60,
-  max_frontal_impulse: 120,
-  min_frontal_impulse: 70,
+  max_frontal_impulse: 100,
+  min_frontal_impulse: 50,
   max_lateral_impulse: 40,
   min_lateral_impulse: 5,
 };
@@ -51,10 +51,14 @@ var racket_options = {
   width: 3.5,
   heigth: 2,
   thickness: 0.01,
-  frame_thickness: 0.1,
+  frame_thickness: 0.05,
   colors: {
-    plane: {r:1, g:1, b:1, a:0.3},
-    frame: {r:0, g:0, b:1, a:0.3},
+    plane: {r:1, g:1, b:1, a:0.2},
+    frame: {r:0, g:0, b:1, a:1},
+  },
+  enemy_colors: {
+    plane: {r:1, g:0, b:0, a:0.2},
+    frame: {r:1, g:0, b:0, a:1},
   },
   // Babylon physics parameters
   mass: 1000000.0,
@@ -84,6 +88,7 @@ var racket_options = {
 };
 
 var ball_options = {
+  status: "nok",
   name: "ball",
   // ball type values: traditional, gravitational, curveball
   type: "traditional",
@@ -138,11 +143,11 @@ var wall_options = {
     z: 0,
   },
   colors: {
-    top: {r:1, g:0, b:0, a:1},
-    bottom: {r:1, g:0, b:0, a:1},
-    rigth: {r:0, g:1, b:0, a:1},
-    left: {r:0, g:1, b:0, a:1},
-    squash: {r:0, g:0, b:1, a:1},
+    top: {r:255, g:197, b:57, a:1}, //255, 197, 57
+    bottom: {r:255, g:88, b:57, a:1}, //255, 88, 57
+    rigth: {r:255, g:159, b:57, a:1}, //255, 159, 57
+    left: {r:255, g:159, b:57, a:1},
+    squash: {r:255, g:164, b:4, a:1}, //255, 164, 4
   },
   // Babylon physics parameters
   mass: 0.0,

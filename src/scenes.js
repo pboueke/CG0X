@@ -6,6 +6,7 @@ var clearScene = function () {
     scene.getMeshByName(objects[i]).dispose();
     // remove name from list
   }
+  ball_options.status = "off";
   objects = [];
 };
 
@@ -26,6 +27,8 @@ var loadGameScene = function () {
   var ball = new Ball();
   var racket = new Racket(1);
   var enemy = null;
+
+  ball_options.status = "onGame";
 
   if (ui_scene.current === "versus_ai" || ui_scene.current === "versus_self"){
     enemy = new Racket(2);
@@ -62,6 +65,7 @@ var loadGameScene = function () {
     var evt = e || window.event;
       if (evt.keyCode === 82) {
         ball.on_game = false;
+        ball_options.status = "toBeReseted";
         reset_ball("");
       }
   });
@@ -124,14 +128,17 @@ var loadGameScene = function () {
   var hit_timer = Math.floor(Date.now() / 1000);
 
   var reset_ball = function (player) {
-    allow_ai_movement = true;
-    hit_timer = Math.floor(Date.now() / 1000);
-    objects.splice(objects.indexOf(ball.sphere.name), 1);
-    ball.light.dispose();
-    ball.sphere.dispose();
-    increment_score();
-    ball = new Ball();
-    setTimeout(move, 1000);
+    if (ball_options.status === "toBeReseted") {
+      allow_ai_movement = true;
+      hit_timer = Math.floor(Date.now() / 1000);
+      objects.splice(objects.indexOf(ball.sphere.name), 1);
+      ball.light.dispose();
+      ball.sphere.dispose();
+      increment_score();
+      ball = new Ball();
+      setTimeout(move, 1000);
+      ball_options.status = "onGame";
+    }
   };
 
   var update_racket = function () {
@@ -194,10 +201,11 @@ var loadGameScene = function () {
   if (!made_contact) {
     update_ball_velocity();
   }
-    var gravity_defactor = (ball_options.type === "gravitational") ? 0.5 : 1;
+    var gravity_defactor = (ball_options.type === "gravitational") ? 1 : 1;
     // ball and delimiter intersections
     if (ball.sphere.intersectsMesh(walls.collider_front, false) && ball.on_game) {
       hit_timer = Math.floor(Date.now() / 1000);
+      ball_options.status = "toBeReseted";
       ball.on_game = false;
       allow_ai_movement = false;
       setTimeout(function() {reset_ball("player2");}, 2000);
@@ -205,6 +213,7 @@ var loadGameScene = function () {
     if (ball.sphere.intersectsMesh(walls.collider_back, true) && ball.on_game) {
       hit_timer = Math.floor(Date.now() / 1000);
       ball.on_game = false;
+      ball_options.status = "toBeReseted";
       allow_ai_movement = false;
       setTimeout(function() {reset_ball("player1");}, 1000);
     }
@@ -273,7 +282,7 @@ var loadGameScene = function () {
     }
     // magnus effect
     if (ball_options.type == "curveball") {
-      var magnus_coefficient = 1;
+      var magnus_coefficient = ball_options.magnus_constant;
       var linear_velocity = new BABYLON.Vector3 (ball_options.velocity.value.x, ball_options.velocity.value.y, ball_options.velocity.value.z);
       var angular_velocity = new BABYLON.Vector3 (ball_options.angular_velocity.x, ball_options.angular_velocity.y, ball_options.angular_velocity.z);
       var force = linear_velocity.multiply(angular_velocity);
@@ -287,7 +296,7 @@ var loadGameScene = function () {
       allow_ai_movement = false;
       setTimeout(function() {reset_ball("");}, 2000);
     }
-    console.log(ball.sphere.rotationQuaternion);
+    //console.log(ball.sphere.rotationQuaternion);
   });
 
 };

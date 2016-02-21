@@ -1,30 +1,3 @@
-function Racket (player) {
-  var faceColors = new Array(6);
-  for (i = 0; i < faceColors.length; i++) {
-    faceColors[i] = new BABYLON.Color4(racket_options.colors.plane.r, racket_options.colors.plane.g, racket_options.colors.plane.b, racket_options.colors.plane.a);
-  }
-  var options = {
-    width: 1,
-    heigth: 1,
-    depth: 1,
-    faceColors: faceColors,
-  };
-  var obj_name = racket_options.name + "_" + racket_options.type + "_" + id.Get();
-  var ball_material = new BABYLON.StandardMaterial("collider_material", scene);
-  ball_material.diffuseColor = new BABYLON.Color3(racket_options.colors.plane.r, racket_options.colors.plane.g, racket_options.colors.plane.b);
-  ball_material.specularColor = new BABYLON.Color3(racket_options.colors.plane.r, racket_options.colors.plane.g, racket_options.colors.plane.b);
-  ball_material.alpha = racket_options.colors.plane.a;
-  this.plane = BABYLON.Mesh.CreateBox(obj_name, options, scene);
-  this.plane.material = ball_material;
-  objects.push(obj_name);
-  this.plane.position = new BABYLON.Vector3(wall_options.position.x, wall_options.position.y, wall_options.position.z);
-  //box.scaling = new BABYLON.Vector3(width, height, depth)
-  this.plane.scaling = new BABYLON.Vector3(racket_options.width, racket_options.heigth, racket_options.thickness);
-  this.plane.position.z = (player === 1 ) ? -wall_options.length/2 + wall_options.thickness/3 : wall_options.length/2 - wall_options.thickness/3;
-  //this.plane.setPhysicsState(BABYLON.PhysicsEngine.BoxImpostor, {mass: racket_options.mass, restitution: racket_options.restitution, friction: racket_options.friction});
-  //this.plane.applyGravity = false;
-}
-
 function Ball () {
   var obj_name = ball_options.name + "_" + ball_options.type + "_" + id.Get();
   var magnus_factor = (ball_options.type === "curveball") ? ball_options.magnus_constant : 0.0;
@@ -46,18 +19,88 @@ function Ball () {
   this.light.specular = new BABYLON.Color3(1, 1, 1);
   this.light.intensity = 0.1;
   this.light.parent = this.sphere;
- /*
-  var texture = new BABYLON.StandardMaterial("texture1", scene);
-  texture.diffuseTexture = new BABYLON.Texture("/CG0X/images/BeachBallColor.jpg", scene);
-  this.sphere = texture;
-  */
+}
+
+function Racket (player) {
+  var faceColors = new Array(6);
+  var colors = (player === 1) ? racket_options.colors : racket_options.enemy_colors;
+  for (i = 0; i < faceColors.length; i++) {
+    faceColors[i] = new BABYLON.Color4(colors.plane.r, colors.plane.g, colors.plane.b, colors.plane.a);
+  }
+  var options = {
+    width: 1,
+    heigth: 1,
+    depth: 1,
+    faceColors: faceColors,
+  };
+  var obj_name = racket_options.name + "_" + racket_options.type + "_" + id.Get();
+  var ball_material = new BABYLON.StandardMaterial("collider_material", scene);
+  ball_material.diffuseColor = new BABYLON.Color3(racket_options.colors.plane.r, racket_options.colors.plane.g, racket_options.colors.plane.b);
+  ball_material.specularColor = new BABYLON.Color3(racket_options.colors.plane.r, racket_options.colors.plane.g, racket_options.colors.plane.b);
+  ball_material.alpha = racket_options.colors.plane.a;
+  this.plane = BABYLON.Mesh.CreateBox(obj_name, options, scene);
+  this.plane.material = ball_material;
+  objects.push(obj_name);
+  this.plane.position = new BABYLON.Vector3(wall_options.position.x, wall_options.position.y, wall_options.position.z);
+  this.plane.scaling = new BABYLON.Vector3(racket_options.width, racket_options.heigth, racket_options.thickness);
+  this.plane.position.z = (player === 1 ) ? -wall_options.length/2 + wall_options.thickness/3 : wall_options.length/2 - wall_options.thickness/3;
+  //top frame
+  faceColors = new Array(6);
+  for (i = 0; i < faceColors.length; i++) {
+    faceColors[i] = new BABYLON.Color4(colors.frame.r, colors.frame.g, colors.frame.b, colors.frame.a);
+  }
+  options = {
+    width: 1,
+    heigth: 1,
+    depth: 1,
+    faceColors: faceColors,
+  };
+  obj_name = wall_options.name + "_frame_" + id.Get();
+  var top_frame = BABYLON.Mesh.CreateBox(obj_name, options, scene);
+  top_frame.scaling = new BABYLON.Vector3(racket_options.width/3.5 , racket_options.frame_thickness/2, 0.1);
+  top_frame.parent = this.plane;
+  top_frame.position.y += racket_options.heigth/4;
+  top_frame.position.z += (player === 1 ) ? -1 : 1;
+  //middle horizontal frame
+  obj_name = wall_options.name + "_frame_" + id.Get();
+  var middle_hor_frame = BABYLON.Mesh.CreateBox(obj_name, options, scene);
+  middle_hor_frame.scaling = new BABYLON.Vector3(racket_options.width/3.5 , racket_options.frame_thickness/2, 0.1);
+  middle_hor_frame.parent = this.plane;
+  middle_hor_frame.position.z += (player === 1 ) ? -1 : 1;
+  // bottom frame
+  obj_name = wall_options.name + "_frame_" + id.Get();
+  var bottom_frame = BABYLON.Mesh.CreateBox(obj_name, options, scene);
+  bottom_frame.scaling = new BABYLON.Vector3(racket_options.width/3.5 , racket_options.frame_thickness/2, 0.1);
+  bottom_frame.parent = this.plane;
+  bottom_frame.position.y -= racket_options.heigth/4;
+  bottom_frame.position.z += (player === 1 ) ? -1 : 1;
+  //left frame
+  obj_name = wall_options.name + "_frame_" + id.Get();
+  var left_frame = BABYLON.Mesh.CreateBox(obj_name, options, scene);
+  left_frame.scaling = new BABYLON.Vector3(racket_options.frame_thickness/3 , racket_options.heigth/2, 0.1);
+  left_frame.parent = this.plane;
+  left_frame.position.x -= racket_options.width/7.1;
+  left_frame.position.z += (player === 1 ) ? -1 : 1;
+  // middle ver frame
+  obj_name = wall_options.name + "_frame_" + id.Get();
+  var midle_ver_frame = BABYLON.Mesh.CreateBox(obj_name, options, scene);
+  midle_ver_frame.scaling = new BABYLON.Vector3(racket_options.frame_thickness/3 , racket_options.heigth/2, 0.1);
+  midle_ver_frame.parent = this.plane;
+  midle_ver_frame.position.z += (player === 1 ) ? -1 : 1;
+  // rigth_frame
+  obj_name = wall_options.name + "_frame_" + id.Get();
+  var rigth_frame = BABYLON.Mesh.CreateBox(obj_name, options, scene);
+  rigth_frame.scaling = new BABYLON.Vector3(racket_options.frame_thickness/3 , racket_options.heigth/2, 0.1);
+  rigth_frame.parent = this.plane;
+  rigth_frame.position.x += racket_options.width/7.1;
+  rigth_frame.position.z += (player === 1 ) ? -1 : 1;
 }
 
 function Walls () {
   //top
   var faceColors = new Array(6);
   for (i = 0; i < faceColors.length; i++) {
-    faceColors[i] = new BABYLON.Color4(wall_options.colors.top.r, wall_options.colors.top.g, wall_options.colors.top.b, wall_options.colors.top.a);
+    faceColors[i] = BABYLON.Color4.FromInts(wall_options.colors.top.r, wall_options.colors.top.g, wall_options.colors.top.b, wall_options.colors.top.a);
   }
   var options = {
     width: 1,
@@ -76,7 +119,7 @@ function Walls () {
   //bottom
   faceColors = new Array(6);
   for (i = 0; i < faceColors.length; i++) {
-    faceColors[i] = new BABYLON.Color4(wall_options.colors.bottom.r, wall_options.colors.bottom.g, wall_options.colors.bottom.b, wall_options.colors.bottom.a);
+    faceColors[i] = BABYLON.Color4.FromInts(wall_options.colors.bottom.r, wall_options.colors.bottom.g, wall_options.colors.bottom.b, wall_options.colors.bottom.a);
   }
   options = {
     width: 1,
@@ -94,7 +137,7 @@ function Walls () {
   //left
   faceColors = new Array(6);
   for (i = 0; i < faceColors.length; i++) {
-    faceColors[i] = new BABYLON.Color4(wall_options.colors.left.r, wall_options.colors.left.g, wall_options.colors.left.b, wall_options.colors.left.a);
+    faceColors[i] = BABYLON.Color4.FromInts(wall_options.colors.left.r, wall_options.colors.left.g, wall_options.colors.left.b, wall_options.colors.left.a);
   }
   options = {
     width: 1,
@@ -112,7 +155,7 @@ function Walls () {
   //right
   faceColors = new Array(6);
   for (i = 0; i < faceColors.length; i++) {
-    faceColors[i] = new BABYLON.Color4(wall_options.colors.rigth.r, wall_options.colors.rigth.g, wall_options.colors.rigth.b, wall_options.colors.rigth.a);
+    faceColors[i] = BABYLON.Color4.FromInts(wall_options.colors.rigth.r, wall_options.colors.rigth.g, wall_options.colors.rigth.b, wall_options.colors.rigth.a);
   }
   options = {
     width: 1,
@@ -131,7 +174,7 @@ function Walls () {
   if (wall_options.type === "squash") {
     faceColors = new Array(6);
     for (i = 0; i < faceColors.length; i++) {
-      faceColors[i] = new BABYLON.Color4(wall_options.colors.squash.r, wall_options.colors.squash.g, wall_options.colors.squash.b, wall_options.colors.squash.a);
+      faceColors[i] = BABYLON.Color4.FromInts(wall_options.colors.squash.r, wall_options.colors.squash.g, wall_options.colors.squash.b, wall_options.colors.squash.a);
     }
     options = {
       width: 1,
@@ -158,7 +201,7 @@ function Walls () {
   objects.push(obj_name);
   this.collider_front.position = new BABYLON.Vector3(wall_options.position.x, wall_options.position.y, wall_options.position.z);
   this.collider_front.scaling = new BABYLON.Vector3(wall_options.width, wall_options.heigth, 0.01);
-  this.collider_front.position.z -= (wall_options.length/2 + ball_options.diameter) ;
+  this.collider_front.position.z -= (wall_options.length/2 + 2 * ball_options.diameter) ;
   //this.collider_front.setPhysicsState(BABYLON.PhysicsEngine.BoxImpostor, {mass: 100, restitution: 0, friction: 1});
   // collider_back
   obj_name = wall_options.name + "_colliderB_" + id.Get();
@@ -167,6 +210,6 @@ function Walls () {
   objects.push(obj_name);
   this.collider_back.position = new BABYLON.Vector3(wall_options.position.x, wall_options.position.y, wall_options.position.z);
   this.collider_back.scaling = new BABYLON.Vector3(wall_options.width, wall_options.heigth, 0.01);
-  this.collider_back.position.z += (wall_options.length/2 + ball_options.diameter) ;
+  this.collider_back.position.z += (wall_options.length/2 + 2 * ball_options.diameter) ;
   //this.collider_back.setPhysicsState(BABYLON.PhysicsEngine.BoxImpostor, {mass: wall_options.mass, restitution: wall_options.restitution, friction: wall_options.friction});
 }

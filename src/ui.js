@@ -71,6 +71,45 @@ var setSoundOptions = function (id, returns) {
   }
 };
 
+var goToMainMenu = function () {
+  clearScene();
+  showMainMenu();
+};
+
+var toggle_scene_status = function () {
+  if (ui_scene.status === "paused") {
+    ui_scene.status = "running";
+    engine.runRenderLoop(function () {
+      scene.render();
+    });
+  } else if (ui_scene.status === "running") {
+    engine.stopRenderLoop();
+    ui_scene.status = "paused";
+  }
+};
+
+var resumeGame = function () {
+  swal.close();
+  setTimeout(toggle_scene_status(), 1000);
+};
+
+var showInGameMenu = function () {
+  swal({   title: "Game Paused",
+           width: 500,
+           showConfirmButton: false,
+           allowEscapeKey: false,
+           allowOutsideClick: false,
+           closeOnCancel: false,
+           closeOnConfirm: true,
+           html: true,
+           text: "<br><br>" +
+                 "<div onclick=\"showControls('ingame_menu')\" class='fkbtn fkbtn-weak-green'><h1>Controls <span class=\"glyphicon glyphicon-education\" aria-hidden=\"true\"></span></h1></div> <br>" +
+                 "<div onclick=\"showOptions('ingame_menu')\" class='fkbtn fkbtn-weak-orange'><h1>Options <span class=\"glyphicon glyphicon-cog\" aria-hidden=\"true\"></span></h1></div> <br>" +
+                 "<div onclick=\"goToMainMenu()\" class='fkbtn fkbtn-strong-red'><h1>Main Menu <span class=\"glyphicon glyphicon-menu-hamburger\" aria-hidden=\"true\"></span></h1></div> <br>" +
+                 "<div onclick=\"resumeGame()\" class='fkbtn fkbtn-weak-blue'><h1>Resume <span class=\"glyphicon glyphicon-play\" aria-hidden=\"true\"></span></h1></div> <br>"
+        });
+};
+
 // [menu] Options
 var showOptions = function (back_to) {
   if (back_to === "main_menu") {
@@ -105,6 +144,8 @@ var showOptions = function (back_to) {
 
 var startGame = function () {
 
+  swal.close();
+
   ui_scene.current = ui_scene.next;
 
   // lock cursor
@@ -112,21 +153,11 @@ var startGame = function () {
                             canvas.mozRequestPointerLock ||
                             canvas.webkitRequestPointerLock;
   canvas.requestPointerLock();
-  swal({   title: "Just one more thing",
-           showConfirmButton: false,
-           allowEscapeKey: true,
-           allowOutsideClick: false,
-           closeOnCancel: false,
-           closeOnConfirm: true,
-           html: true,
-           text: "<b>Please, allow the game to lock your mouse cursor</b>" +
-                 "<br><br>" +
-                 "<br><br>" +
-                 "<br><br>"
-         });
+
   clearScene();
   loadGameScene();
-  setTimeout(engine.stopRenderLoop(), 100);
+  engine.stopRenderLoop();
+  setTimeout(toggle_scene_status, 1000);
 };
 
 var changeBallType = function (type) {
@@ -251,6 +282,7 @@ var showMainMenu = function  () {
                  "<div onclick=\"showControls('main_menu')\" class='fkbtn fkbtn-weak-green'><h1>Controls <span class=\"glyphicon glyphicon-education\" aria-hidden=\"true\"></span></h1></div> <br>" +
                  "<div onclick=\"showAbout('main_menu', 'Go Back')\" class='fkbtn fkbtn-grey'><h1>About <span class=\"glyphicon glyphicon-info-sign\" aria-hidden=\"true\"></span></h1></div> <br>"
         });
+  ui_scene.current = "main_menu";
 };
 
 // Resize
@@ -260,21 +292,23 @@ window.addEventListener("resize", function () {
 
 window.addEventListener("keydown", function (e) {
   var evt = e || window.event;
-  if (evt.keyCode === 32 || evt.keyCode === 80|| evt.keyCode === 83 || evt.keyCode === 13) {
-      if (ui_scene.status === "paused") {
-        ui_scene.status = "running";
-        engine.runRenderLoop(function () {
-          scene.render();
-        });
-      } else if (ui_scene.status === "running") {
-        engine.stopRenderLoop();
-        ui_scene.status = "paused";
-      }
+  if (evt.keyCode === 32) { // space bar
+      toggle_scene_status();
     }
-    if (evt.keyCode === 76) {
+    if (evt.keyCode === 76) { //r
       canvas.requestPointerLock = canvas.requestPointerLock ||
                                 canvas.mozRequestPointerLock ||
                                 canvas.webkitRequestPointerLock;
       canvas.requestPointerLock();
+    }
+    if (evt.keyCode === 192 || evt.keyCode === 80 || evt.keyCode === 27) { // ' and p and esc
+      if (ui_scene.current === "versus_ai" || ui_scene.current === "versus_self" || ui_scene.current === "squash") {
+        if (ui_scene.status === "running") {
+          toggle_scene_status();
+          showInGameMenu();
+        } else {
+          resumeGame();
+        }
+      }
     }
 });

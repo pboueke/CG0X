@@ -10,7 +10,7 @@ var engine = new BABYLON.Engine(canvas, true);
 
 // This creates a basic Babylon Scene object (non-mesh)
 var scene = new BABYLON.Scene(engine);
-scene.clearColor = new BABYLON.Color4(0, 0, 0, 1);
+scene.clearColor = new BABYLON.Color4(22/255, 209/255, 183/255, 1);// 22, 209, 183
 scene.enablePhysics(new BABYLON.Vector3(0, -20, 0), new BABYLON.OimoJSPlugin());
 
 // This creates and positions a free camera (non-mesh)
@@ -27,6 +27,12 @@ var light = new BABYLON.HemisphericLight("light1", new BABYLON.Vector3(14, 9, -4
 
 // Default intensity is 1. Let's dim the light a small amount
 light.intensity = 0.7;
+
+var update_fps = function () {
+  document.getElementById("fps").innerHTML = "<h5>" + Math.ceil(engine.getFps()).toString() + " FPS</h5>";
+  setTimeout(update_fps, 10*delta_time);
+};
+update_fps();
 
 var loadedscene = loadSphereDemoScene();
 
