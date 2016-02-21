@@ -28,9 +28,9 @@ var showAbout = function (back_to, msg) {
                  "<a rel='license' href='http://creativecommons.org/licenses/by-nc/4.0/''>" +
                  "<img alt='Creative Commons License' style='border-width:0' src='https://i.creativecommons.org/l/by-nc/4.0/88x31.png' />" +
                  "</a><br><br><small>This work is licensed under a " +
-                 "<a rel='license' href='http://creativecommons.org/licenses/by-nc/4.0/'>Creative Commons Attribution-NonCommercial 4.0 International License</a>.</small> <br><br><br>" +
-                 "Source:<br><a href='https://github.com/pboueke/CG0X'><img width='100px' src='images/GitHub-Logo.png' /></a><br><br>" +
-                 "<div onclick=" + parent + " class='fkbtn fkbtn-grey'><h1>" + msg + " <span class=\"glyphicon glyphicon-menu-hamburger\" aria-hidden=\"true\"></span></h1></div> <br>"
+                 "<a rel='license' href='http://creativecommons.org/licenses/by-nc/4.0/'>Creative Commons Attribution-NonCommercial 4.0 International License</a>.</small> <br><br>" +
+                 "Source:<br><a href='https://github.com/pboueke/CG0X'><img width='100px' src='images/GitHub-Logo.png' /></a><br><br><small>version 1.0</small><br><br>" +
+                 "<div onclick=" + parent + " class='fkbtn fkbtn-grey'><h1>" + msg + " <span class=\"glyphicon glyphicon-menu-hamburger\" aria-hidden=\"true\"></span></h1></div>"
         });
 };
 
@@ -126,7 +126,7 @@ var showOptions = function (back_to) {
            closeOnCancel: false,
            closeOnConfirm: false,
            html: true,
-           text: "<b>Audio:</b><br><br>" +
+           text: "<b>Audio (currently unavailable):</b><br><br>" +
                  "<div id='musicBtn' onclick=\"setSoundOptions('music', false)\" class='"+music_options[1]+"'>"+music_options[0]+"</div>" +
                  "<div id='sfxBtn' onclick=\"setSoundOptions('sfx', false)\" class='"+sfx_options[1]+"'>"+sfx_options[0]+"</div> <br>" +
                  "<br><br>" +
