@@ -337,7 +337,7 @@ var loadGameScene = function () {
       ball.sphere.applyImpulse(force, ball.sphere.position);
     }
     // resets ball if it is lost or stops
-    if (Math.floor(Date.now() / 1000) - hit_timer > 15) {
+    if (Math.floor(Date.now() / 1000) - hit_timer > 10) {
       hit_timer = Math.floor(Date.now() / 1000);
       ball.on_game = false;
       allow_ai_movement = false;

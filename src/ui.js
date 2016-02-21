@@ -14,7 +14,7 @@ var showAbout = function (back_to, msg) {
   } else if (back_to === "ingame_menu") {
     parent = "'showInGameMenu()'";
   }
-  swal({   title: "CG0X",
+  swal({   title: "<span style='line-height:10px;'>PONGO<br><small>p o n g</small></span>",
            showConfirmButton: false,
            allowEscapeKey: false,
            allowOutsideClick: false,
@@ -23,8 +23,7 @@ var showAbout = function (back_to, msg) {
            html: true,
            text: "<a href='http://pboueke.github.io/b/'>by pboueke</a> " +
                  "<a href='https://github.com/pboueke'><img width='30px' src='images/githubprofile.png' /></a>" +
-                 "<br><br>This is a project for the Computer Graphics course at UFRJ.<br><br>Feel free to contact me at " +
-                 "<br><code>p h b o u e k e 'at' g m a i l . c o m</code><br><br>There's also my " +
+                 "<br><br>This is a project for the Computer Graphics course at UFRJ.<br><br>Found a <code>bug</code>?<br>Here's  my " +
                  "<a href='http://pboueke.github.io/b/about/'>info page</a>.<br><br>" +
                  "<a rel='license' href='http://creativecommons.org/licenses/by-nc/4.0/''>" +
                  "<img alt='Creative Commons License' style='border-width:0' src='https://i.creativecommons.org/l/by-nc/4.0/88x31.png' />" +
