@@ -46,10 +46,11 @@ function Ball () {
   this.light.specular = new BABYLON.Color3(1, 1, 1);
   this.light.intensity = 0.1;
   this.light.parent = this.sphere;
-
+ /*
   var texture = new BABYLON.StandardMaterial("texture1", scene);
   texture.diffuseTexture = new BABYLON.Texture("/CG0X/images/BeachBallColor.jpg", scene);
   this.sphere = texture;
+  */
 }
 
 function Walls () {
