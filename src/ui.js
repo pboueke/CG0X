@@ -104,6 +104,9 @@ var showOptions = function (back_to) {
 };
 
 var startGame = function () {
+
+  ui_scene.current = ui_scene.next;
+
   // lock cursor
   canvas.requestPointerLock = canvas.requestPointerLock ||
                             canvas.mozRequestPointerLock ||

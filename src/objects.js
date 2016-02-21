@@ -1,4 +1,4 @@
-function Racket () {
+function Racket (player) {
   var faceColors = new Array(6);
   for (i = 0; i < faceColors.length; i++) {
     faceColors[i] = new BABYLON.Color4(racket_options.colors.plane.r, racket_options.colors.plane.g, racket_options.colors.plane.b, racket_options.colors.plane.a);
@@ -20,7 +20,7 @@ function Racket () {
   this.plane.position = new BABYLON.Vector3(wall_options.position.x, wall_options.position.y, wall_options.position.z);
   //box.scaling = new BABYLON.Vector3(width, height, depth)
   this.plane.scaling = new BABYLON.Vector3(racket_options.width, racket_options.heigth, racket_options.thickness);
-  this.plane.position.z = -wall_options.length/2 + wall_options.thickness/3;
+  this.plane.position.z = (player === 1 ) ? -wall_options.length/2 + wall_options.thickness/3 : wall_options.length/2 - wall_options.thickness/3;
   //this.plane.setPhysicsState(BABYLON.PhysicsEngine.BoxImpostor, {mass: racket_options.mass, restitution: racket_options.restitution, friction: racket_options.friction});
   //this.plane.applyGravity = false;
 }
@@ -39,6 +39,17 @@ function Ball () {
   } else {
     scene.setGravity(new BABYLON.Vector3(0, 0, 0));
   }
+  this.sphere.rotation = new BABYLON.Vector3.Zero();
+  this.sphere.rotationQuaternion = new BABYLON.Quaternion(1);
+  this.light = new BABYLON.PointLight("ball_ligth", new BABYLON.Vector3(0, 0, 0), scene);
+  this.light.diffuse = new BABYLON.Color3(1, 0, 0);
+  this.light.specular = new BABYLON.Color3(1, 1, 1);
+  this.light.intensity = 0.1;
+  this.light.parent = this.sphere;
+/*
+  var texture = new BABYLON.StandardMaterial("texture1", scene);
+  texture.diffuseTexture = new BABYLON.Texture("http://www.robinwood.com/Catalog/FreeStuff/Textures/TextureDownloads/Balls/BeachBallColor.jpg", scene);
+  this.sphere = texture;*/
 }
 
 function Walls () {

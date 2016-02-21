@@ -5,12 +5,14 @@ var objects = [];
 
 var delta_time = 10;
 
+var difficulty = 4;
+
 var contact_multiplier = {
   lateral_ball: 5,
   frontal_ball: 40,
-  lateral_racket: 10,
+  lateral_racket: 20,
   frontal_racket: 60,
-  max_frontal_impulse: 160,
+  max_frontal_impulse: 120,
   min_frontal_impulse: 70,
   max_lateral_impulse: 40,
   min_lateral_impulse: 5,
@@ -68,6 +70,16 @@ var racket_options = {
       y: 0,
       z: 0,
     },
+  },
+  enemy_velocity: {
+    last_x: 0,
+    last_y: 0,
+    last_z: 0,
+    value: {
+      x: 0,
+      y: 0,
+      z: 0,
+    },
   }
 };
 
@@ -103,6 +115,12 @@ var ball_options = {
       y: 0,
       z: 0,
     },
+  },
+  last_quaternion: new BABYLON.Quaternion (0,0,0,0),
+  angular_velocity: {
+    x: 0,
+    y: 0,
+    z: 0,
   }
 };
 
