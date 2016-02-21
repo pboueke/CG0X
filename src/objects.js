@@ -48,7 +48,7 @@ function Ball () {
   this.light.parent = this.sphere;
 
   var texture = new BABYLON.StandardMaterial("texture1", scene);
-  texture.diffuseTexture = new BABYLON.Texture("CG0X/images/BeachBallColor.jpg", scene);
+  texture.diffuseTexture = new BABYLON.Texture("/images/BeachBallColor.jpg", scene);
   this.sphere = texture;
 }
 
