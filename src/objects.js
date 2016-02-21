@@ -87,13 +87,13 @@ function Racket (player) {
   midle_ver_frame.scaling = new BABYLON.Vector3(racket_options.frame_thickness/3 , racket_options.heigth/2, 0.1);
   midle_ver_frame.parent = this.plane;
   midle_ver_frame.position.z += (player === 1 ) ? -1 : 1;
-  // rigth_frame
+  // right_frame
   obj_name = wall_options.name + "_frame_" + id.Get();
-  var rigth_frame = BABYLON.Mesh.CreateBox(obj_name, options, scene);
-  rigth_frame.scaling = new BABYLON.Vector3(racket_options.frame_thickness/3 , racket_options.heigth/2, 0.1);
-  rigth_frame.parent = this.plane;
-  rigth_frame.position.x += racket_options.width/7.1;
-  rigth_frame.position.z += (player === 1 ) ? -1 : 1;
+  var right_frame = BABYLON.Mesh.CreateBox(obj_name, options, scene);
+  right_frame.scaling = new BABYLON.Vector3(racket_options.frame_thickness/3 , racket_options.heigth/2, 0.1);
+  right_frame.parent = this.plane;
+  right_frame.position.x += racket_options.width/7.1;
+  right_frame.position.z += (player === 1 ) ? -1 : 1;
 }
 
 function Walls () {
@@ -200,7 +200,7 @@ function Walls () {
   this.collider_front.material = collider_material;
   objects.push(obj_name);
   this.collider_front.position = new BABYLON.Vector3(wall_options.position.x, wall_options.position.y, wall_options.position.z);
-  this.collider_front.scaling = new BABYLON.Vector3(wall_options.width, wall_options.heigth, 0.01);
+  this.collider_front.scaling = new BABYLON.Vector3(2*wall_options.width, 2*wall_options.heigth, 0.01);
   this.collider_front.position.z -= (wall_options.length/2 + 2 * ball_options.diameter) ;
   //this.collider_front.setPhysicsState(BABYLON.PhysicsEngine.BoxImpostor, {mass: 100, restitution: 0, friction: 1});
   // collider_back
@@ -209,7 +209,7 @@ function Walls () {
   this.collider_back.material = collider_material;
   objects.push(obj_name);
   this.collider_back.position = new BABYLON.Vector3(wall_options.position.x, wall_options.position.y, wall_options.position.z);
-  this.collider_back.scaling = new BABYLON.Vector3(wall_options.width, wall_options.heigth, 0.01);
+  this.collider_back.scaling = new BABYLON.Vector3(20*wall_options.width, 20*wall_options.heigth, 0.01);
   this.collider_back.position.z += (wall_options.length/2 + 2 * ball_options.diameter) ;
   //this.collider_back.setPhysicsState(BABYLON.PhysicsEngine.BoxImpostor, {mass: wall_options.mass, restitution: wall_options.restitution, friction: wall_options.friction});
 }

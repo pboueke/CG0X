@@ -12,9 +12,9 @@ var contact_multiplier = {
   frontal_ball: 40,
   lateral_racket: 20,
   frontal_racket: 60,
-  max_frontal_impulse: 100,
-  min_frontal_impulse: 50,
-  max_lateral_impulse: 40,
+  max_frontal_impulse: 80,
+  min_frontal_impulse: 40,
+  max_lateral_impulse: 30,
   min_lateral_impulse: 5,
 };
 

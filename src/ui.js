@@ -268,6 +268,7 @@ var showModeSelector = function () {
 
 // [master] Main menu
 var showMainMenu = function  () {
+  toggle_scene_status();
   swal({   title: "Main Menu",
            width: 500,
            showConfirmButton: false,
@@ -283,6 +284,7 @@ var showMainMenu = function  () {
                  "<div onclick=\"showAbout('main_menu', 'Go Back')\" class='fkbtn fkbtn-grey'><h1>About <span class=\"glyphicon glyphicon-info-sign\" aria-hidden=\"true\"></span></h1></div> <br>"
         });
   ui_scene.current = "main_menu";
+  setTimeout(toggle_scene_status, 200);
 };
 
 // Resize

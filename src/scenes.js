@@ -160,7 +160,11 @@ var loadGameScene = function () {
     setTimeout(update_ball_agunlar_velocity, delta_time);
   };
 
-  var made_contact = false;
+  var contact = {
+    made: false,
+    frame_counter: 0,
+    frame_limit: 5,
+  };
 
   var update_ball_velocity = function () {
     ball_options.velocity.value.x = ball_options.velocity.last_x - ball.sphere.position.x;
@@ -198,7 +202,7 @@ var loadGameScene = function () {
   }
 
   scene.registerBeforeRender(function () {
-  if (!made_contact) {
+  if (!contact.made) {
     update_ball_velocity();
   }
     var gravity_defactor = (ball_options.type === "gravitational") ? 1 : 1;
@@ -220,31 +224,41 @@ var loadGameScene = function () {
     //ball intersection with player's racket
     if (ball.sphere.intersectsMesh(racket.plane, true)) {
       hit_timer = Math.floor(Date.now() / 1000);
-      if (!made_contact) {
-        var imp = new BABYLON.Vector3(gravity_defactor * clamp_number(-ball_options.velocity.value.x * contact_multiplier.lateral_ball + (racket_options.velocity.value.x * contact_multiplier.lateral_racket), contact_multiplier.min_lateral_impulse, contact_multiplier.max_lateral_impulse),
-                                      gravity_defactor * clamp_number(-ball_options.velocity.value.y * contact_multiplier.lateral_ball + (racket_options.velocity.value.y * contact_multiplier.lateral_racket), contact_multiplier.min_lateral_impulse, contact_multiplier.max_lateral_impulse),
-                                      gravity_defactor * clamp_number(ball_options.velocity.value.z * contact_multiplier.frontal_ball + (Math.sqrt(Math.pow(racket_options.velocity.value.x, 2)+Math.pow(racket_options.velocity.value.y, 2))) * contact_multiplier.frontal_racket, contact_multiplier.min_frontal_impulse, contact_multiplier.max_frontal_impulse));
+      if (!contact.made) {
+        var imp = new BABYLON.Vector3(gravity_defactor * clamp_number(-2.5*(clamp_number(ball_options.velocity.value.x, -1, 1) * contact_multiplier.lateral_ball + (racket_options.velocity.value.x * contact_multiplier.lateral_racket)), -contact_multiplier.max_lateral_impulse, contact_multiplier.max_lateral_impulse),
+                                      gravity_defactor * clamp_number(-2.5*(clamp_number(ball_options.velocity.value.y, -1, 1) * contact_multiplier.lateral_ball + (racket_options.velocity.value.y * contact_multiplier.lateral_racket)), -contact_multiplier.max_lateral_impulse, contact_multiplier.max_lateral_impulse),
+                                      gravity_defactor * clamp_number(2*(Math.abs(clamp_number(ball_options.velocity.value.z, -1, 1)) * contact_multiplier.frontal_ball + (Math.sqrt(Math.pow(clamp_number(racket_options.velocity.value.x, -1, 1), 2)+Math.pow(clamp_number(racket_options.velocity.value.y,-1,1), 2))) * contact_multiplier.frontal_racket), contact_multiplier.min_frontal_impulse, contact_multiplier.max_frontal_impulse));
         ball.sphere.applyImpulse(imp, ball.sphere.position);
         ball.sphere.rotationQuaternion = new BABYLON.Quaternion (racket_options.velocity.value.y, racket_options.velocity.value.x, 0, (Math.sqrt(Math.pow(racket_options.velocity.value.x, 2)+Math.pow(racket_options.velocity.value.y, 2))));
+        console.log("ball ", ball_options.velocity.value," racket ", racket_options.velocity.value);
+        //console.log(Math.abs(ball_options.velocity.value.z) * contact_multiplier.frontal_ball, "+", Math.sqrt(Math.pow(racket_options.velocity.value.x, 2)+Math.pow(racket_options.velocity.value.y, 2)) * contact_multiplier.frontal_racket);
+        console.log(imp);
       }
-      made_contact = true;
+      contact.made = true;
     } else {
-      made_contact = false;
-    }
+      contact.frame_counter += 1;
+      if (contact.frame_counter === contact.frame_limit) {
+        contact.frame_counter = 0;
+        contact.made = false;
+      }    }
     // ball intersection with enemy's racket
     if (ui_scene.current === "versus_ai" || ui_scene.current === "versus_self") {
       hit_timer = Math.floor(Date.now() / 1000);
       if (ball.sphere.intersectsMesh(enemy.plane, true)) {
-        if (!made_contact) {
+        if (!contact.made) {
           var imp2 = new BABYLON.Vector3(gravity_defactor * clamp_number(-ball_options.velocity.value.x * contact_multiplier.lateral_ball + (racket_options.enemy_velocity.value.x * contact_multiplier.lateral_racket), contact_multiplier.min_lateral_impulse, contact_multiplier.max_lateral_impulse),
                                         gravity_defactor * clamp_number(-ball_options.velocity.value.y * contact_multiplier.lateral_ball + (racket_options.enemy_velocity.value.y * contact_multiplier.lateral_racket), contact_multiplier.min_lateral_impulse, contact_multiplier.max_lateral_impulse),
                                         -1 * gravity_defactor * clamp_number(ball_options.velocity.value.z * contact_multiplier.frontal_ball + (Math.sqrt(Math.pow(racket_options.enemy_velocity.value.x, 2)+Math.pow(racket_options.enemy_velocity.value.y, 2))) * contact_multiplier.frontal_racket, contact_multiplier.min_frontal_impulse, contact_multiplier.max_frontal_impulse));
           ball.sphere.applyImpulse(imp2, ball.sphere.position);
           //ball.sphere.rotationQuaternion.add(new BABYLON.Quaternion (racket_options.enemy_velocity.value.y, racket_options.enemy_velocity.value.x, 0, (Math.sqrt(Math.pow(racket_options.enemy_velocity.value.x, 2)+Math.pow(racket_options.enemy_velocity.value.y, 2)))));
         }
-        made_contact = true;
+        contact.made = true;
       } else {
-        made_contact = false;
+        contact.frame_counter += 1;
+        if (contact.frame_counter === contact.frame_limit) {
+          contact.frame_counter = 0;
+          contact.made = false;
+        }
       }
     }
     if (allow_movement) {
