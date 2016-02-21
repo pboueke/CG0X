@@ -80,7 +80,7 @@ var loadGameScene = function () {
                                                  ball.sphere.position);
   };
 
-  setTimeout(move, 1000);
+  //setTimeout(move, 10000);
 
   var clamp_number = function (num, min, max) {
     var res = num;
@@ -129,18 +129,22 @@ var loadGameScene = function () {
       ball.light.dispose();
       ball.sphere.dispose();
       ball = new Ball();
-      if (player === "player1") {
+      if (player === "player1" && score.limit !== -1) {
         score.player2 -= 1;
-      } else if (player === "player2") {
+      } else if (player === "player2" && score.limit !== -1) {
         score.player1 -= 1;
+      } else if (player === "player1" && score.limit === -1) {
+        score.player1 += 1;
+      } else if (player === "player2" && score.limit === -1) {
+        score.player2 += 1;
       }
-      if (score.player1 < 0) {
+      if (score.player1 < 0 && score.limit !== -1) {
         engine.stopRenderLoop();
         swal( {
           title:"You Lost",
           text:"<h3><span style='color:black;'>Your score: " + score.points.toString() + "</span></h3><br><br><br>" +
           "<div onclick=\"location.reload()\" class='fkbtn fkbtn-strong-blue'><h1>Main Menu <span class=\"glyphicon glyphicon-menu-hamburger\" aria-hidden=\"true\"></span></h1></div> <br>",
-          type:"success",
+          type:"error",
           width: 500,
           showConfirmButton: false,
           allowEscapeKey: false,
@@ -149,13 +153,13 @@ var loadGameScene = function () {
           closeOnConfirm: true,
           html: true
         });
-      } else if (score.player2 < 0) {
+      } else if (score.player2 < 0 && score.limit != -1) {
         engine.stopRenderLoop();
         swal( {
           title:"Winner!",
           text:"<h3><span style='color:black;'>Your score: " + score.points.toString() + "</span></h3><br><br><br>" +
           "<div onclick=\"location.reload()\" class='fkbtn fkbtn-strong-blue'><h1>Main Menu <span class=\"glyphicon glyphicon-menu-hamburger\" aria-hidden=\"true\"></span></h1></div> <br>",
-          type:"error",
+          type:"success",
           width: 500,
           showConfirmButton: false,
           allowEscapeKey: false,
@@ -254,15 +258,13 @@ var loadGameScene = function () {
     if (ball.sphere.intersectsMesh(racket.plane, true)) {
       hit_timer = Math.floor(Date.now() / 1000);
       if (!contact.made) {
-        console.log("bateunimin");
+
         var imp = new BABYLON.Vector3(gravity_defactor * clamp_number(-2.5*(clamp_number(ball_options.velocity.value.x, -1, 1) * contact_multiplier.lateral_ball + (racket_options.velocity.value.x * contact_multiplier.lateral_racket)), -contact_multiplier.max_lateral_impulse, contact_multiplier.max_lateral_impulse),
                                       gravity_defactor * clamp_number(-2.5*(clamp_number(ball_options.velocity.value.y, -1, 1) * contact_multiplier.lateral_ball + (racket_options.velocity.value.y * contact_multiplier.lateral_racket)), -contact_multiplier.max_lateral_impulse, contact_multiplier.max_lateral_impulse),
                                       gravity_defactor * clamp_number(2*(Math.abs(clamp_number(ball_options.velocity.value.z, -1, 1)) * contact_multiplier.frontal_ball + (Math.sqrt(Math.pow(clamp_number(racket_options.velocity.value.x, -1, 1), 2)+Math.pow(clamp_number(racket_options.velocity.value.y,-1,1), 2))) * contact_multiplier.frontal_racket), contact_multiplier.min_frontal_impulse, contact_multiplier.max_frontal_impulse));
         ball.sphere.applyImpulse(imp, ball.sphere.position);
         ball.sphere.rotationQuaternion = new BABYLON.Quaternion (racket_options.velocity.value.y, racket_options.velocity.value.x, 0, (Math.sqrt(Math.pow(racket_options.velocity.value.x, 2)+Math.pow(racket_options.velocity.value.y, 2))));
-        console.log("ball ", ball_options.velocity.value," racket ", racket_options.velocity.value);
-        //console.log(Math.abs(ball_options.velocity.value.z) * contact_multiplier.frontal_ball, "+", Math.sqrt(Math.pow(racket_options.velocity.value.x, 2)+Math.pow(racket_options.velocity.value.y, 2)) * contact_multiplier.frontal_racket);
-        console.log(imp);
+        score.points += Math.ceil(Math.sqrt(Math.pow(ball_options.velocity.value.x,2) + Math.pow(ball_options.velocity.value.y,2) + Math.pow(ball_options.velocity.value.z,2)) * 100);
       }
       contact.made = true;
     } else {
@@ -270,13 +272,13 @@ var loadGameScene = function () {
       if (contact.frame_counter === contact.frame_limit) {
         contact.frame_counter = 0;
         contact.made = false;
-      }    }
+      }
+    }
     // ball intersection with enemy's racket
     if (ui_scene.current === "versus_ai" || ui_scene.current === "versus_self") {
-      hit_timer = Math.floor(Date.now() / 1000);
       if (ball.sphere.intersectsMesh(enemy.plane, true)) {
+        hit_timer = Math.floor(Date.now() / 1000);
         if (!contact.made) {
-          console.log("bateu nele");
           var imp2 = new BABYLON.Vector3(gravity_defactor * clamp_number(-2.5*clamp_number(ball_options.velocity.value.x, -1, 1) * contact_multiplier.lateral_ball + (racket_options.enemy_velocity.value.x * contact_multiplier.lateral_racket), contact_multiplier.min_lateral_impulse, contact_multiplier.max_lateral_impulse),
                                          gravity_defactor * clamp_number(-2.5*clamp_number(ball_options.velocity.value.y, -1, 1) * contact_multiplier.lateral_ball + (racket_options.enemy_velocity.value.y * contact_multiplier.lateral_racket), contact_multiplier.min_lateral_impulse, contact_multiplier.max_lateral_impulse),
                                          -1 * gravity_defactor * clamp_number(2*Math.abs(ball_options.velocity.value.z, -1, 1) * contact_multiplier.frontal_ball + (Math.sqrt(Math.pow(clamp_number(racket_options.enemy_velocity.value.x, -1, 1), 2)+Math.pow(clamp_number(racket_options.enemy_velocity.value.y,-1,1), 2))) * contact_multiplier.frontal_racket, contact_multiplier.min_frontal_impulse, contact_multiplier.max_frontal_impulse));
@@ -335,11 +337,12 @@ var loadGameScene = function () {
       ball.sphere.applyImpulse(force, ball.sphere.position);
     }
     // resets ball if it is lost or stops
-    if (Math.floor(Date.now() / 1000) - hit_timer > 10) {
-      hit_timer = 0;
+    if (Math.floor(Date.now() / 1000) - hit_timer > 15) {
+      hit_timer = Math.floor(Date.now() / 1000);
       ball.on_game = false;
       allow_ai_movement = false;
-      setTimeout(function() {reset_ball("");}, 2000);
+      ball_options.status = "toBeReseted";
+      reset_ball("");
     }
     //console.log(ball.sphere.rotationQuaternion);
   });

@@ -201,7 +201,7 @@ function Walls () {
   this.collider_front.material = collider_material;
   objects.push(obj_name);
   this.collider_front.position = new BABYLON.Vector3(wall_options.position.x, wall_options.position.y, wall_options.position.z);
-  this.collider_front.scaling = new BABYLON.Vector3(2*wall_options.width, 2*wall_options.heigth, 0.01);
+  this.collider_front.scaling = new BABYLON.Vector3(20*wall_options.width, 20*wall_options.heigth, 0.01);
   this.collider_front.position.z -= (wall_options.length/2 + 2 * ball_options.diameter) ;
   //this.collider_front.setPhysicsState(BABYLON.PhysicsEngine.BoxImpostor, {mass: 100, restitution: 0, friction: 1});
   // collider_back

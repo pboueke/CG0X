@@ -90,6 +90,7 @@ var toggle_scene_status = function () {
 
 var resumeGame = function () {
   swal.close();
+  hit_timer = Math.floor(Date.now() / 1000);
   setTimeout(toggle_scene_status(), 1000);
 };
 
@@ -163,7 +164,7 @@ var startGame = function () {
 var changeBallType = function (type) {
   var div_seleted_class = "fkbtn fkbtn-third fkbtn-strong-red";
   var non_seleted_class = "fkbtn fkbtn-third fkbtn-weak-blue";
-  ball_options.type = type;
+  ball_options.type = (type === "curveball") ? "traditional" : type;
   document.getElementById('traditionalballBtn').className = ((ball_options.type === "traditional") ? div_seleted_class : non_seleted_class);
   document.getElementById('gravitationalballBtn').className = ((ball_options.type === "gravitational") ? div_seleted_class : non_seleted_class);
   document.getElementById('curveballBtn').className = ((ball_options.type === "curveball") ? div_seleted_class : non_seleted_class);
@@ -220,7 +221,9 @@ var showGameOptions = function (back_to, next_area) {
     wall_options.type = "squash";
   } else if (next_area.indexOf("versus") > -1) {
     wall_options.type = "versus";
-    difficulty = getGameDiffucultyLayout();
+    if (next_area.indexOf("ai") > -1) {
+      difficulty = getGameDiffucultyLayout();
+    }
   }
   swal({   title: "Game Options",
            showConfirmButton: false,
@@ -232,7 +235,7 @@ var showGameOptions = function (back_to, next_area) {
            text: "<b>Ball Type:</b><br><br><div class='row'>" +
                  "<div class='col-md-4'><div id='traditionalballBtn' onclick=\"changeBallType('traditional')\" class=''><h4>Traditional<br>ball</h4></div></div>" +
                  "<div class='col-md-4'><div id='gravitationalballBtn' onclick=\"changeBallType('gravitational')\" class=''><h4>Gravitational<br>ball</h4></div></div>" +
-                 "<div class='col-md-4'><div id='curveballBtn' onclick=\"changeBallType('curveball')\" class=''><h4>Curve<br>ball</h4></div></div> <br>" +
+                 "<div class='col-md-4'><div id='curveballBtn' onclick=\"changeBallType('curveball')\" class=''><h4>Curve ball<br>(not available)</h4></div></div> <br>" +
                  "</div>" +
                  difficulty +
                  getBallsNumberLayout() +
@@ -240,7 +243,7 @@ var showGameOptions = function (back_to, next_area) {
                  "<div onclick=" + parent + " class='fkbtn fkbtn-grey'><h1>Go Back <span class=\"glyphicon glyphicon-menu-hamburger\" aria-hidden=\"true\"></span></h1></div> <br>"
          });
          changeBallType (ball_options.type);
-         if (next_area.indexOf("versus") > -1) {
+         if (next_area.indexOf("ai") > -1) {
            changeDifficulty(2);
          }
          changeBallsNumber(7);
@@ -262,9 +265,13 @@ var showControls = function (back_to) {
            closeOnConfirm: false,
            html: true,
            text: "<br><br>" +
+                 "Press '<b>L</b>' to lock the mouse cursor (very important!)." +
                  "<br><br>" +
+                 "Press '<b>Esc</b>' to unlock the mouse cursor." +
                  "<br><br>" +
+                 "Press '<b>Esc</b>' or '<b>'</b>' to open the in game menu." +
                  "<br><br>" +
+                 "Move the racket with your mouse." +
                  "<br><br>" +
                  "<br><br>" +
                  "<br><br>" +
@@ -363,12 +370,13 @@ window.addEventListener("keydown", function (e) {
 });
 
 var update_score = function() {
+  var icon = (score.limit !== -1) ? "<span class=\"glyphicon glyphicon-heart\" aria-hidden=\"true\"></span>" : "<span class=\"glyphicon glyphicon-screenshot\" aria-hidden=\"true\"></span>";
   if (ui_scene.current === "versus_ai" || ui_scene.current === "versus_self") {
-    document.getElementById("player1score").innerHTML = "<h4><span style=\"color:black;\">Player1: </span> <span style=\"color:blue;\">"+score.player1.toString()+"x<span class=\"glyphicon glyphicon-heart\" aria-hidden=\"true\"></span></h4>";
+    document.getElementById("player1score").innerHTML = "<h4><span style=\"color:black;\">Player1: </span> <span style=\"color:blue;\">"+score.player1.toString()+"x"+icon+"</h4>";
     document.getElementById("points").innerHTML = "<h4><span style=\"color:black;\">Score: </span> <span style=\"color:purple;\">"+score.points.toString()+"</span></h4>";
-    document.getElementById("player2score").innerHTML = "<h4><span style=\"color:black;\">Player2: </span><span style=\"color:red;\">"+score.player2.toString()+"x<span class=\"glyphicon glyphicon-heart\" aria-hidden=\"true\"></span></h4>";
+    document.getElementById("player2score").innerHTML = "<h4><span style=\"color:black;\">Player2: </span><span style=\"color:red;\">"+score.player2.toString()+"x"+icon+"</h4>";
   } else if (ui_scene.current === "squash") {
-    document.getElementById("player1score").innerHTML = "<h4><span style=\"color:black;\">Player1: </span> <span style=\"color:blue;\">"+score.player1.toString()+"x<span class=\"glyphicon glyphicon-heart\" aria-hidden=\"true\"></span></h4>";
+    document.getElementById("player1score").innerHTML = "<h4><span style=\"color:black;\">Player1: </span> <span style=\"color:blue;\">"+score.player1.toString()+"x"+icon+"</h4>";
     document.getElementById("points").innerHTML = "<h4><span style=\"color:black;\">Score: </span> <span style=\"color:purple;\">"+score.points.toString()+"</span></h4>";
     document.getElementById("player2score").innerHTML = "";
   } else {
