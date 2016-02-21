@@ -105,7 +105,7 @@ var showInGameMenu = function () {
            text: "<br><br>" +
                  "<div onclick=\"showControls('ingame_menu')\" class='fkbtn fkbtn-weak-green'><h1>Controls <span class=\"glyphicon glyphicon-education\" aria-hidden=\"true\"></span></h1></div> <br>" +
                  "<div onclick=\"showOptions('ingame_menu')\" class='fkbtn fkbtn-weak-orange'><h1>Options <span class=\"glyphicon glyphicon-cog\" aria-hidden=\"true\"></span></h1></div> <br>" +
-                 "<div onclick=\"goToMainMenu()\" class='fkbtn fkbtn-strong-red'><h1>Main Menu <span class=\"glyphicon glyphicon-menu-hamburger\" aria-hidden=\"true\"></span></h1></div> <br>" +
+                 "<div onclick=\"location.reload()\" class='fkbtn fkbtn-strong-red'><h1>Main Menu <span class=\"glyphicon glyphicon-menu-hamburger\" aria-hidden=\"true\"></span></h1></div> <br>" +
                  "<div onclick=\"resumeGame()\" class='fkbtn fkbtn-weak-blue'><h1>Resume <span class=\"glyphicon glyphicon-play\" aria-hidden=\"true\"></span></h1></div> <br>"
         });
 };
@@ -169,14 +169,58 @@ var changeBallType = function (type) {
   document.getElementById('curveballBtn').className = ((ball_options.type === "curveball") ? div_seleted_class : non_seleted_class);
 };
 
+var changeDifficulty = function (lvl) {
+  var div_seleted_class = "fkbtn-thin fkbtn-third fkbtn-strong-red";
+  var non_seleted_class = "fkbtn-thin fkbtn-third fkbtn-weak-blue";
+  difficulty = lvl;
+  document.getElementById('easy').className = ((difficulty === 2) ? div_seleted_class : non_seleted_class);
+  document.getElementById('medium').className = ((difficulty === 3) ? div_seleted_class : non_seleted_class);
+  document.getElementById('hard').className = ((difficulty === 4) ? div_seleted_class : non_seleted_class);
+  document.getElementById('harder').className = ((difficulty === 5) ? div_seleted_class : non_seleted_class);
+};
+
+var getGameDiffucultyLayout = function () {
+  return "<br><b>Difficulty:</b><br><br><div class='row' id='difficultyBtns'>" +
+        "<div class='col-md-3'><div id='easy' onclick=\"changeDifficulty(2)\" class=''><h4>Easy</h4></div></div>" +
+        "<div class='col-md-3'><div id='medium' onclick=\"changeDifficulty(3)\" class=''><h4>Medium</h4></div></div>" +
+        "<div class='col-md-3'><div id='hard' onclick=\"changeDifficulty(4)\" class=''><h4>Hard</h4></div></div>" +
+        "<div class='col-md-3'><div id='harder' onclick=\"changeDifficulty(5)\" class=''><h4>Harder</h4></div></div> <br>" +
+        "</div><br>";
+};
+
+var changeBallsNumber = function (nmb) {
+  var div_seleted_class = "fkbtn-thin fkbtn-third fkbtn-strong-red";
+  var non_seleted_class = "fkbtn-thin fkbtn-third fkbtn-weak-blue";
+  score.limit = nmb;
+  score.player1 = ((score.limit === -1) ? 0 : score.limit);
+  score.player2 = ((score.limit === -1) ? 0 : score.limit);
+  document.getElementById('7b').className = ((score.limit === 7) ? div_seleted_class : non_seleted_class);
+  document.getElementById('15b').className = ((score.limit === 15) ? div_seleted_class : non_seleted_class);
+  document.getElementById('21b').className = ((score.limit === 21) ? div_seleted_class : non_seleted_class);
+  document.getElementById('30b').className = ((score.limit === 30) ? div_seleted_class : non_seleted_class);
+  document.getElementById('infb').className = ((score.limit === -1) ? div_seleted_class : non_seleted_class);
+};
+
+var getBallsNumberLayout = function () {
+  return "<b>Number of balls:</b><br><br><div class='row' id='difficultyBtns'>" +
+        "<div class='col-md-2 col-md-offset-1'><div id='7b' onclick=\"changeDifficulty(7)\" class=''><h4>7</h4></div></div>" +
+        "<div class='col-md-2'><div id='15b' onclick=\"changeBallsNumber(15)\" class=''><h4>15</h4></div></div>" +
+        "<div class='col-md-2'><div id='21b' onclick=\"changeBallsNumber(21)\" class=''><h4>21</h4></div></div>" +
+        "<div class='col-md-2'><div id='30b' onclick=\"changeBallsNumber(30)\" class=''><h4>30</h4></div></div>" +
+        "<div class='col-md-2'><div id='infb' onclick=\"changeBallsNumber(-1)\" class=''><h4>∞</h4></div></div> <br>" +
+        "</div><br><br>";
+};
+
 // [game] Game Options
 var showGameOptions = function (back_to, next_area) {
   var parent = (back_to === "versus_type") ? "showVersusTypeSelector()" : "showModeSelector()";
+  var difficulty = "<br><br><br><br><br><br><br><br>";
   ui_scene.next = next_area;
   if (next_area.indexOf("squash") > -1) {
     wall_options.type = "squash";
   } else if (next_area.indexOf("versus") > -1) {
     wall_options.type = "versus";
+    difficulty = getGameDiffucultyLayout();
   }
   swal({   title: "Game Options",
            showConfirmButton: false,
@@ -189,14 +233,17 @@ var showGameOptions = function (back_to, next_area) {
                  "<div class='col-md-4'><div id='traditionalballBtn' onclick=\"changeBallType('traditional')\" class=''><h4>Traditional<br>ball</h4></div></div>" +
                  "<div class='col-md-4'><div id='gravitationalballBtn' onclick=\"changeBallType('gravitational')\" class=''><h4>Gravitational<br>ball</h4></div></div>" +
                  "<div class='col-md-4'><div id='curveballBtn' onclick=\"changeBallType('curveball')\" class=''><h4>Curve<br>ball</h4></div></div> <br>" +
-                 "</div><br><br>" +
-                 "<br><br>" +
-                 "<br><br>" +
-                 "<br><br>" +
+                 "</div>" +
+                 difficulty +
+                 getBallsNumberLayout() +
                  "<div onclick=\"startGame()\" class='fkbtn fkbtn-strong-green'><h1>Start <span class=\"glyphicon glyphicon-play\" aria-hidden=\"true\"></span></h1></div> <br>" +
                  "<div onclick=" + parent + " class='fkbtn fkbtn-grey'><h1>Go Back <span class=\"glyphicon glyphicon-menu-hamburger\" aria-hidden=\"true\"></span></h1></div> <br>"
          });
          changeBallType (ball_options.type);
+         if (next_area.indexOf("versus") > -1) {
+           changeDifficulty(2);
+         }
+         changeBallsNumber(7);
 };
 
 // [menu] Controls
@@ -314,3 +361,22 @@ window.addEventListener("keydown", function (e) {
       }
     }
 });
+
+var update_score = function() {
+  if (ui_scene.current === "versus_ai" || ui_scene.current === "versus_self") {
+    document.getElementById("player1score").innerHTML = "<h4><span style=\"color:black;\">Player1: </span> <span style=\"color:blue;\">"+score.player1.toString()+"x<span class=\"glyphicon glyphicon-heart\" aria-hidden=\"true\"></span></h4>";
+    document.getElementById("points").innerHTML = "<h4><span style=\"color:black;\">Score: </span> <span style=\"color:purple;\">"+score.points.toString()+"</span></h4>";
+    document.getElementById("player2score").innerHTML = "<h4><span style=\"color:black;\">Player2: </span><span style=\"color:red;\">"+score.player2.toString()+"x<span class=\"glyphicon glyphicon-heart\" aria-hidden=\"true\"></span></h4>";
+  } else if (ui_scene.current === "squash") {
+    document.getElementById("player1score").innerHTML = "<h4><span style=\"color:black;\">Player1: </span> <span style=\"color:blue;\">"+score.player1.toString()+"x<span class=\"glyphicon glyphicon-heart\" aria-hidden=\"true\"></span></h4>";
+    document.getElementById("points").innerHTML = "<h4><span style=\"color:black;\">Score: </span> <span style=\"color:purple;\">"+score.points.toString()+"</span></h4>";
+    document.getElementById("player2score").innerHTML = "";
+  } else {
+    document.getElementById("player1score").innerHTML = "";
+    document.getElementById("points").innerHTML = "";
+    document.getElementById("player2score").innerHTML = "";
+  }
+  setTimeout(update_score, 500);
+};
+
+update_score();

@@ -5,7 +5,7 @@ var objects = [];
 
 var delta_time = 10;
 
-var difficulty = 4;
+var difficulty = 2;
 
 var contact_multiplier = {
   lateral_ball: 5,
@@ -34,8 +34,9 @@ var ui_scene = {
 };
 
 var score = {
-  player1: 0,
-  player2: 0,
+  limit: 7,
+  player1: 7,
+  player2: 7,
   points: 0,
 };
 

@@ -32,6 +32,8 @@ var loadGameScene = function () {
 
   if (ui_scene.current === "versus_ai" || ui_scene.current === "versus_self"){
     enemy = new Racket(2);
+  } else {
+    enemy = new Racket(3);
   }
 
   var allow_movement = false;
@@ -80,14 +82,6 @@ var loadGameScene = function () {
 
   setTimeout(move, 1000);
 
-  var increment_score = function (player) {
-    if (player === "player1") {
-      score.player1 += 1;
-    } else if (player === "player2") {
-      score.player2 += 1;
-    }
-  };
-
   var clamp_number = function (num, min, max) {
     var res = num;
     if (res < min) {
@@ -134,8 +128,43 @@ var loadGameScene = function () {
       objects.splice(objects.indexOf(ball.sphere.name), 1);
       ball.light.dispose();
       ball.sphere.dispose();
-      increment_score();
       ball = new Ball();
+      if (player === "player1") {
+        score.player2 -= 1;
+      } else if (player === "player2") {
+        score.player1 -= 1;
+      }
+      if (score.player1 < 0) {
+        engine.stopRenderLoop();
+        swal( {
+          title:"You Lost",
+          text:"<h3><span style='color:black;'>Your score: " + score.points.toString() + "</span></h3><br><br><br>" +
+          "<div onclick=\"location.reload()\" class='fkbtn fkbtn-strong-blue'><h1>Main Menu <span class=\"glyphicon glyphicon-menu-hamburger\" aria-hidden=\"true\"></span></h1></div> <br>",
+          type:"success",
+          width: 500,
+          showConfirmButton: false,
+          allowEscapeKey: false,
+          allowOutsideClick: false,
+          closeOnCancel: false,
+          closeOnConfirm: true,
+          html: true
+        });
+      } else if (score.player2 < 0) {
+        engine.stopRenderLoop();
+        swal( {
+          title:"Winner!",
+          text:"<h3><span style='color:black;'>Your score: " + score.points.toString() + "</span></h3><br><br><br>" +
+          "<div onclick=\"location.reload()\" class='fkbtn fkbtn-strong-blue'><h1>Main Menu <span class=\"glyphicon glyphicon-menu-hamburger\" aria-hidden=\"true\"></span></h1></div> <br>",
+          type:"error",
+          width: 500,
+          showConfirmButton: false,
+          allowEscapeKey: false,
+          allowOutsideClick: false,
+          closeOnCancel: false,
+          closeOnConfirm: true,
+          html: true
+        });
+      }
       setTimeout(move, 1000);
       ball_options.status = "onGame";
     }
@@ -163,7 +192,7 @@ var loadGameScene = function () {
   var contact = {
     made: false,
     frame_counter: 0,
-    frame_limit: 5,
+    frame_limit: 20,
   };
 
   var update_ball_velocity = function () {
@@ -225,6 +254,7 @@ var loadGameScene = function () {
     if (ball.sphere.intersectsMesh(racket.plane, true)) {
       hit_timer = Math.floor(Date.now() / 1000);
       if (!contact.made) {
+        console.log("bateunimin");
         var imp = new BABYLON.Vector3(gravity_defactor * clamp_number(-2.5*(clamp_number(ball_options.velocity.value.x, -1, 1) * contact_multiplier.lateral_ball + (racket_options.velocity.value.x * contact_multiplier.lateral_racket)), -contact_multiplier.max_lateral_impulse, contact_multiplier.max_lateral_impulse),
                                       gravity_defactor * clamp_number(-2.5*(clamp_number(ball_options.velocity.value.y, -1, 1) * contact_multiplier.lateral_ball + (racket_options.velocity.value.y * contact_multiplier.lateral_racket)), -contact_multiplier.max_lateral_impulse, contact_multiplier.max_lateral_impulse),
                                       gravity_defactor * clamp_number(2*(Math.abs(clamp_number(ball_options.velocity.value.z, -1, 1)) * contact_multiplier.frontal_ball + (Math.sqrt(Math.pow(clamp_number(racket_options.velocity.value.x, -1, 1), 2)+Math.pow(clamp_number(racket_options.velocity.value.y,-1,1), 2))) * contact_multiplier.frontal_racket), contact_multiplier.min_frontal_impulse, contact_multiplier.max_frontal_impulse));
@@ -246,9 +276,10 @@ var loadGameScene = function () {
       hit_timer = Math.floor(Date.now() / 1000);
       if (ball.sphere.intersectsMesh(enemy.plane, true)) {
         if (!contact.made) {
-          var imp2 = new BABYLON.Vector3(gravity_defactor * clamp_number(-ball_options.velocity.value.x * contact_multiplier.lateral_ball + (racket_options.enemy_velocity.value.x * contact_multiplier.lateral_racket), contact_multiplier.min_lateral_impulse, contact_multiplier.max_lateral_impulse),
-                                        gravity_defactor * clamp_number(-ball_options.velocity.value.y * contact_multiplier.lateral_ball + (racket_options.enemy_velocity.value.y * contact_multiplier.lateral_racket), contact_multiplier.min_lateral_impulse, contact_multiplier.max_lateral_impulse),
-                                        -1 * gravity_defactor * clamp_number(ball_options.velocity.value.z * contact_multiplier.frontal_ball + (Math.sqrt(Math.pow(racket_options.enemy_velocity.value.x, 2)+Math.pow(racket_options.enemy_velocity.value.y, 2))) * contact_multiplier.frontal_racket, contact_multiplier.min_frontal_impulse, contact_multiplier.max_frontal_impulse));
+          console.log("bateu nele");
+          var imp2 = new BABYLON.Vector3(gravity_defactor * clamp_number(-2.5*clamp_number(ball_options.velocity.value.x, -1, 1) * contact_multiplier.lateral_ball + (racket_options.enemy_velocity.value.x * contact_multiplier.lateral_racket), contact_multiplier.min_lateral_impulse, contact_multiplier.max_lateral_impulse),
+                                         gravity_defactor * clamp_number(-2.5*clamp_number(ball_options.velocity.value.y, -1, 1) * contact_multiplier.lateral_ball + (racket_options.enemy_velocity.value.y * contact_multiplier.lateral_racket), contact_multiplier.min_lateral_impulse, contact_multiplier.max_lateral_impulse),
+                                         -1 * gravity_defactor * clamp_number(2*Math.abs(ball_options.velocity.value.z, -1, 1) * contact_multiplier.frontal_ball + (Math.sqrt(Math.pow(clamp_number(racket_options.enemy_velocity.value.x, -1, 1), 2)+Math.pow(clamp_number(racket_options.enemy_velocity.value.y,-1,1), 2))) * contact_multiplier.frontal_racket, contact_multiplier.min_frontal_impulse, contact_multiplier.max_frontal_impulse));
           ball.sphere.applyImpulse(imp2, ball.sphere.position);
           //ball.sphere.rotationQuaternion.add(new BABYLON.Quaternion (racket_options.enemy_velocity.value.y, racket_options.enemy_velocity.value.x, 0, (Math.sqrt(Math.pow(racket_options.enemy_velocity.value.x, 2)+Math.pow(racket_options.enemy_velocity.value.y, 2)))));
         }
@@ -312,7 +343,6 @@ var loadGameScene = function () {
     }
     //console.log(ball.sphere.rotationQuaternion);
   });
-
 };
 
 var loadSceneMainMenu = function () {

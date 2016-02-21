@@ -44,6 +44,7 @@ function Racket (player) {
   this.plane.position = new BABYLON.Vector3(wall_options.position.x, wall_options.position.y, wall_options.position.z);
   this.plane.scaling = new BABYLON.Vector3(racket_options.width, racket_options.heigth, racket_options.thickness);
   this.plane.position.z = (player === 1 ) ? -wall_options.length/2 + wall_options.thickness/3 : wall_options.length/2 - wall_options.thickness/3;
+  this.plane.position.z = (player === 3 ) ? wall_options.length : this.plane.position.z;
   //top frame
   faceColors = new Array(6);
   for (i = 0; i < faceColors.length; i++) {
