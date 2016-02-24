@@ -203,7 +203,7 @@ var changeBallsNumber = function (nmb) {
 
 var getBallsNumberLayout = function () {
   return "<b>Number of balls:</b><br><br><div class='row' id='difficultyBtns'>" +
-        "<div class='col-md-2 col-md-offset-1'><div id='7b' onclick=\"changeDifficulty(7)\" class=''><h4>7</h4></div></div>" +
+        "<div class='col-md-2 col-md-offset-1'><div id='7b' onclick=\"changeBallsNumber(7)\" class=''><h4>7</h4></div></div>" +
         "<div class='col-md-2'><div id='15b' onclick=\"changeBallsNumber(15)\" class=''><h4>15</h4></div></div>" +
         "<div class='col-md-2'><div id='21b' onclick=\"changeBallsNumber(21)\" class=''><h4>21</h4></div></div>" +
         "<div class='col-md-2'><div id='30b' onclick=\"changeBallsNumber(30)\" class=''><h4>30</h4></div></div>" +
